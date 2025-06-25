@@ -14,7 +14,7 @@ API key needed : add a variable OPENAI_API_KEY in the environement. In bash or z
 * python3.10 -m venv ~/BIN/pyt310 (for instance)
 * source ~/BIN/pyt310/bin/activate
 * python -V
-* pip install -U "autogen-agentchat" "autogen-ext[openai]
+* pip install -U "autogen-agentchat" "autogen-ext[openai]"
 
 ### PyCharm
 * There is a menu in the bottom-right part of the window to choose a venv for the project
