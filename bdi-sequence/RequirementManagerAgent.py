@@ -1,0 +1,46 @@
+from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
+from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
+
+from Message import *
+
+@type_subscription(topic_type=init_topic_type)
+class RequirementManagerAgent(RoutedAgent):
+    def __init__(self, model_client: ChatCompletionClient) -> None:
+        super().__init__("An requirement generator agent.")
+        self._system_message = SystemMessage(
+            content=(
+                "You are a requirement manager."
+                " Given a specification of a system, and a list of atomic requireents, tell if that list of atomic requirements covers well that specification."
+                " Answer YES is the specification is well covered."
+                " Answer NO otherwise."
+            )
+        )
+        self._model_client = model_client
+
+    @message_handler
+    async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
+        the_list = message.current_list if message.current_list != "" else "EMPTY"
+        prompt = (f"This is the specification of the system: {message.initial_desription}"
+                  f"This is the list of atomic requirements: {the_list}")
+        llm_result = await self._model_client.create(
+            messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
+            cancellation_token=ctx.cancellation_token,
+        )
+        response = llm_result.content
+        assert isinstance(response, str)
+        print(f"{'-'*80}")
+        print("I am the requirement manager agent.")
+        print("I received the initial specification and the list of atomic requirement and passed them to the LLM to decide if I should continue.")
+        print(f"The current list of atomic requirements is:" + message.current_list)
+        print("Here is its answer.")
+        print(f"{'-' * 80}")
+        print(response)
+        print ("(NO means not covered yet, YES means well covered)")
+        print(f"{'-' * 80}\n")
+
+        if response == "YES":
+            print ("END")
+        else:
+            await self.publish_message(Message(initial_desription= message.initial_desription,
+                                               current_list=message.current_list),
+                                       topic_id=TopicId(cut_request_topic_type, source=self.id.key))

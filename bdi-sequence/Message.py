@@ -4,15 +4,16 @@ from dataclasses import dataclass
 
 @dataclass
 class Message:
-    desire: str = None
-    options : str = None
-    intention : str = None
-    validation: str = None
+    initial_desription: str
+    current_list : str
+    atomic_requirement_tentative : str = None
+    validation:str = None
 
 
 # Topics
 
-desire_topic_type = "DESIRE"
-option_topic_type = "OPTIONS"
-intention_topic_type = "INTENTION"
-validated_topic_type = "VALIDATED"
+cut_request_topic_type = "CUT"
+validation_request_topic_type = "VALIDATION_REQ"
+validation_result_topic_type = "VALIDATION_RES"
+addition_request_topic_type = "ADD"
+init_topic_type = "INIT"

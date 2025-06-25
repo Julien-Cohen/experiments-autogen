@@ -7,10 +7,10 @@ from autogen_core import (
 )
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
-from OptionGeneratorAgent import OptionGeneratorAgent
-from OptionSelectorAgent import OptionSelectorAgent
-from UserAgent import UserAgent
-from OptionValidatorAgent import *
+from RequirementManagerAgent import RequirementManagerAgent
+from DecomposerAgent import DecomposerAgent
+from LooperAgent import LooperAgent
+from RequirementValidatorAgent import *
 
 
 async def main():
@@ -23,28 +23,25 @@ async def main():
     )
     runtime = SingleThreadedAgentRuntime()
 
-    await OptionGeneratorAgent.register(
-        runtime, type=desire_topic_type, factory=lambda: OptionGeneratorAgent(model_client=model_client)
+    await RequirementManagerAgent.register(
+        runtime, type=init_topic_type, factory=lambda: RequirementManagerAgent(model_client=model_client)
     )
-    await OptionSelectorAgent.register(
-        runtime, type=option_topic_type, factory=lambda: OptionSelectorAgent(model_client=model_client)
+    await DecomposerAgent.register(
+        runtime, type=cut_request_topic_type, factory=lambda: DecomposerAgent(model_client=model_client)
     )
-    await OptionValidatorAgent.register(
-        runtime, type=intention_topic_type, factory=lambda: OptionValidatorAgent(model_client=model_client)
+    await RequirementValidatorAgent.register(
+        runtime, type=validation_request_topic_type, factory=lambda: RequirementValidatorAgent(model_client=model_client)
     )
 
-    await UserAgent.register(runtime, type=validated_topic_type, factory=lambda: UserAgent())
+    await LooperAgent.register(runtime, type=validation_result_topic_type, factory=lambda: LooperAgent())
 
     # Run the workflow
 
     runtime.start()
 
     await runtime.publish_message(
-        #Message(desire="I want to know the temperature in the capital of France"),
-        #Message(desire="I want to become strong at playing volleyball"),
-        Message(desire="I want to visit the moon."), # Sometimes invalidated
-        # Message(desire="I want to visit another dimension."),
-        topic_id=TopicId(desire_topic_type, source="default"),
+        Message(initial_desription="A system to manage a space mission.", current_list=""),
+        topic_id=TopicId(init_topic_type, source="default"),
     )
 
     await runtime.stop_when_idle()
