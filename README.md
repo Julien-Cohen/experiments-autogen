@@ -20,7 +20,8 @@ API key needed :
 * source ~/BIN/pyt310/bin/activate
 * python -V
 * pip install -U "autogen-agentchat" "autogen-ext[openai]"
-
+* or pip install -r requirements.txt
+ 
 ### PyCharm
 * There is a menu in the bottom-right part of the window to choose a venv for the project.
 * From that menu you can also install package (like pip install)
