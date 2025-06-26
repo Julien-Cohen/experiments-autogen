@@ -2,14 +2,18 @@ from autogen_core import type_subscription, RoutedAgent, message_handler, Messag
 from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from Message import *
+from LLMRoutedAgent import *
 
 @type_subscription(topic_type=init_topic_type)
-class RequirementManagerAgent(RoutedAgent):
+class RequirementManagerAgent(LLMRoutedAgent):
+
+
+
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("An requirement generator agent.")
+        super().__init__("An requirement generator agent.", "You are a requirement manager.")
         self._system_message = SystemMessage(
             content=(
-                "You are a requirement manager."
+                self.llm_role +
                 " Given a specification of a system, and a list of atomic requireents, tell if that list of atomic requirements covers well that specification."
                 " Answer YES is the specification is well covered."
                 " Answer NO otherwise."

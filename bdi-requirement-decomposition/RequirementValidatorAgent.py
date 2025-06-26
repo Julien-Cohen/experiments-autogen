@@ -3,14 +3,18 @@ from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from Message import *
 
+from LLMRoutedAgent import *
 
 @type_subscription(topic_type=validation_request_topic_type)
-class RequirementValidatorAgent(RoutedAgent):
+class RequirementValidatorAgent(LLMRoutedAgent):
+
+
+
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("An option validator agent.")
+        super().__init__("An option validator agent.", "You are a requirement validator.")
         self._system_message = SystemMessage(
             content=(
-                "You are a requirement validator. "
+                self.llm_role +
                 " Given an initial specification of a system, a list of atomic requirements for that system, and a new atomic requirement,"
                 " validate that this new requirement is correct with respect to the initial specification, is not redundant with the atomic requirements already listed, and is not contradictory with the atomic requirements already listed."
                 " Start your answer with CORRECT if you validate."

@@ -3,14 +3,17 @@ from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from Message import *
 
+from LLMRoutedAgent import *
 
 @type_subscription(topic_type=cut_request_topic_type)
-class DecomposerAgent(RoutedAgent):
+class DecomposerAgent(LLMRoutedAgent):
+
+
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("An decomposer agent.")
+        super().__init__("An decomposer agent.", "You are a decomposer. ")
         self._system_message = SystemMessage(
             content=(
-                "You are a decomposer. "
+                self.llm_role +
                 " You receive a specification of a system, and a list of atomic requirements about that system."
                 " You have to identify exactly one requirements that is related to the received specification and which is not in the list of atomic requirements."
             )
