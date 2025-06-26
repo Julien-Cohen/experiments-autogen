@@ -10,6 +10,10 @@ class LooperAgent(RoutedAgent, BDIData):
     def __init__(self) -> None:
         super().__init__("A Looper agent (Algorithmic).")
 
+        self.desire.append("Pass to the manager a list of requirement complete.")
+        self.desire.append("Pass to the manager a list of requirement correct.")
+        self.desire.append("Pass to the manager a list of requirements without redundancy.")
+
     @message_handler
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
         bdi_observe_message(self, message)

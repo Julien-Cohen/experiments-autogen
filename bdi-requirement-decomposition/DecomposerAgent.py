@@ -20,7 +20,9 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
             )
         )
         self._model_client = model_client
+
         self.llm_explicit_directive = "Now please propose a new requirement (exactly one)."
+        self.desire.append("Find requirements related to the specifications, that help to complete the list of atomic requirements.")
 
 
     @message_handler

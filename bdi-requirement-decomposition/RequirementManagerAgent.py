@@ -22,6 +22,8 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
         self._model_client = model_client
         self.llm_explicit_directive = "Do you think the specification if well covered ?"
 
+        self.desire.append("Build a list of atomic requirements that cover the given specification.")
+
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
         bdi_observe_message(self, message)

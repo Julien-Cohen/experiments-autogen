@@ -24,6 +24,9 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
         self._model_client = model_client
         self.llm_explicit_directive = "Do you validate this?"
 
+        self.desire.append("Ensure that the new requirement is correct.")
+        self.desire.append("Ensure that the new requirement is not already taken into account.")
+
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
         bdi_observe_message(self, message)
