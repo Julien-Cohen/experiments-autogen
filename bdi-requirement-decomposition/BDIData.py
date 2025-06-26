@@ -7,7 +7,7 @@ class BDIData:
     intention = None
 
     def add_belief(self, data : str, tag : str):
-        self.context_belief.append( (data,tag) )
+        self.context_belief.insert(0, (data,tag) ) # insert at head
 
     def get_belief_by_tag(self, tag):
         for (a,b) in self.context_belief:
