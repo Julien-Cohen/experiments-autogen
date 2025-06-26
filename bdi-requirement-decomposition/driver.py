@@ -5,6 +5,7 @@ from autogen_core import (
     SingleThreadedAgentRuntime,
     TopicId,
 )
+from autogen_core.models import ModelInfo
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 from RequirementManagerAgent import RequirementManagerAgent
@@ -17,10 +18,20 @@ async def main():
 
     # Workflow
 
-    model_client = OpenAIChatCompletionClient(
+    model_client_1 = OpenAIChatCompletionClient(
         model="gpt-4o-mini",
         # api_key="YOUR_API_KEY"
     )
+
+    model_client_2 = OpenAIChatCompletionClient(
+        model="gemini-2.0-flash-lite",
+        model_info=ModelInfo(vision=True, function_calling=True, json_output=True, family="unknown",
+                             structured_output=True)
+        # api_key="GEMINI_API_KEY",
+    )
+
+    model_client = model_client_2
+
     runtime = SingleThreadedAgentRuntime()
 
     await RequirementManagerAgent.register(
