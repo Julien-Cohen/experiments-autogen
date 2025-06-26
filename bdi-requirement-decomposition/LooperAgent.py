@@ -12,11 +12,11 @@ class LooperAgent(RoutedAgent, BDIData):
 
     @message_handler
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
-        bdi_eat_message(self, message)
+        bdi_observe_message(self, message)
 
         print(f"{'-' * 80}")
-        print("I am: " + self._description +
-              " My goal is to re-launch the process, with a convenient list of atomic requirements.")
+        print("I am: " + self._description)
+        print("My goal is to re-launch the process, with a convenient list of atomic requirements.")
         print("I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation.")
         print(f"You described the following specification:\n" + self.get_belief_by_tag(spec_tag) +"\n")
         print(f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n")

@@ -23,7 +23,7 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
 
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
-        bdi_eat_message(self, message)
+        bdi_observe_message(self, message)
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)

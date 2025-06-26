@@ -25,7 +25,8 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
-        bdi_eat_message(self, message)
+        bdi_observe_message(self, message)
+        self.set_intention(message.atomic_requirement_tentative)
 
         the_list = self.get_belief_by_tag(req_list_tag) if self.get_belief_by_tag(req_list_tag) != "" else "EMPTY" # fixme
 
@@ -35,7 +36,7 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
         prompt = f"Initial specification:"+ self.get_belief_by_tag(spec_tag) +" ;"\
                  f" Current atomic requirements: {the_list} ;"\
-                 f" New atomic requirement to validate: {message.atomic_requirement_tentative}"
+                 f" New atomic requirement to validate: {self.intention}"
         llm_result = await self._model_client.create(
             messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
             cancellation_token=ctx.cancellation_token,
@@ -53,6 +54,6 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
         await self.publish_message(Message(initial_desription=self.get_belief_by_tag(spec_tag),
                                            current_list= self.get_belief_by_tag(req_list_tag),
-                                           atomic_requirement_tentative=message.atomic_requirement_tentative,
+                                           atomic_requirement_tentative=self.intention,
                                            validation=str(answer_bool)),
                                    topic_id=TopicId(validation_result_topic_type, source=self.id.key))
