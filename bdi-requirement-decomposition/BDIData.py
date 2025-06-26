@@ -1,6 +1,16 @@
+from asyncio import InvalidStateError
+
+
 class BDIData:
-    context_belief = None
-    retrieved_belief = None
-    inferred_belief = None
+    context_belief = []
     desire = None
     intention = None
+
+    def add_belief(self, data : str, tag : str):
+        self.context_belief.append( (data,tag) )
+
+    def get_belief_by_tag(self, tag):
+        for (a,b) in self.context_belief:
+            if tag == b :
+                return a
+        raise InvalidStateError
