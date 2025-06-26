@@ -32,7 +32,7 @@ class RequirementValidatorAgent(RoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         print(f"{'-' * 80}")
-        print("I am the Validator Agent.")
+        print("I am the Validator Agent (LLM).")
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
         print("Here is its answer.")
         print(f"{'-' * 80}")

@@ -29,7 +29,7 @@ class DecomposerAgent(RoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         print(f"{'-' * 80}")
-        print("I am the Decomposer agent.")
+        print("I am the Decomposer agent (LLM).")
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
         print("Here is its answer.")
         print(f"{'-' * 80}")

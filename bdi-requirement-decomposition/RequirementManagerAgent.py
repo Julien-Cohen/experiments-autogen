@@ -29,16 +29,16 @@ class RequirementManagerAgent(RoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         print(f"{'-'*80}")
-        print("I am the requirement manager agent.")
-        print("I received the initial specification and the list of atomic requirement and passed them to the LLM to decide if I should continue.")
+        print("I am the Requirement Manager agent (LLM).")
+        print("I received the initial specification and the list of atomic requirements and passed them to the LLM to tell if the specification is well covered.")
         print(f"The current list of atomic requirements is:" + message.current_list)
-        print("Here is its answer.")
+        print("Here is its answer. (NO means not covered yet, YES means well covered)")
+
         print(f"{'-' * 80}")
         print(response)
-        print ("(NO means not covered yet, YES means well covered)")
         print(f"{'-' * 80}\n")
 
-        if response == "YES":
+        if response.startswith("YES"):
             print ("END")
         else:
             await self.publish_message(Message(initial_desription= message.initial_desription,
