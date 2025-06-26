@@ -18,14 +18,15 @@ class LooperAgent(RoutedAgent):
         print(f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n")
         print(f"Validation: {message.validation}")
         if bool(message.validation) :
-            print(f"This atomic requirement has been validated.")
+            print(f"(validated)")
         else:
-            print(f"This atomic requirement has been invalidated.")
-        print ("Continue" if message.validation else "Stop")
+            print(f"(invalidated)")
         print(f"{'-' * 80}\n")
 
+        new_list = message.current_list + " \n * " + message.atomic_requirement_tentative if bool(message.validation) else message.current_list
+
         if message.validation :
-            await self.publish_message(Message(initial_desription=message.initial_desription, current_list=message.current_list + " \n * " + message.atomic_requirement_tentative ),
+            await self.publish_message(Message(initial_desription=message.initial_desription, current_list=new_list ),
                                        topic_id=TopicId(init_topic_type, source=self.id.key))
 
 

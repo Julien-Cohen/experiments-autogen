@@ -40,11 +40,13 @@ class RequirementManagerAgent(LLMRoutedAgent):
 
         print(f"{'-' * 80}")
         print(response)
-        print(f"{'-' * 80}\n")
+        print(f"{'-' * 80}")
 
         if response.startswith("YES"):
-            print ("END")
+            print ("(End)")
         else:
+            print ("(Continue)")
+            print(f"{'-' * 80}\n")
             await self.publish_message(Message(initial_desription= message.initial_desription,
                                                current_list=message.current_list),
                                        topic_id=TopicId(cut_request_topic_type, source=self.id.key))
