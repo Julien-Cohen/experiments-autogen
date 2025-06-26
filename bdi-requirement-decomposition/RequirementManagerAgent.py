@@ -14,12 +14,13 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
-                " Given a specification of a system, and a list of atomic requireents, tell if that list of atomic requirements covers well that specification."
+                " Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
                 " Answer YES is the specification is well covered."
                 " Answer NO otherwise."
             )
         )
         self._model_client = model_client
+        self.llm_explicit_directive = "Do you think the specification if well covered ?"
 
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
@@ -33,7 +34,8 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
 
         the_list = message.current_list if message.current_list != "" else "EMPTY"
         prompt = (f"This is the specification of the system: {message.initial_desription}"
-                  f"This is the list of atomic requirements: {the_list}")
+                  f"This is the list of atomic requirements: {the_list}"
+                  + self.llm_explicit_directive)
         llm_result = await self._model_client.create(
             messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
             cancellation_token=ctx.cancellation_token,

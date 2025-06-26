@@ -22,6 +22,7 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
             )
         )
         self._model_client = model_client
+        self.llm_explicit_directive = "Do you validate this?"
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
@@ -34,9 +35,10 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
         print("I am: " + self._description)
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
 
-        prompt = f"Initial specification:"+ self.get_belief_by_tag(spec_tag) +" ;"\
-                 f" Current atomic requirements: {the_list} ;"\
-                 f" New atomic requirement to validate: {self.intention}"
+        prompt = (f"Initial specification:"+ self.get_belief_by_tag(spec_tag) +" ;"
+                 f" Current atomic requirements: {the_list} ;"
+                 f" New atomic requirement to validate: {self.intention} " +
+                    self.llm_explicit_directive)
         llm_result = await self._model_client.create(
             messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
             cancellation_token=ctx.cancellation_token,

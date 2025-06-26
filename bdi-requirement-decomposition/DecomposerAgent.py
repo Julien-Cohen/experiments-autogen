@@ -20,6 +20,8 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
             )
         )
         self._model_client = model_client
+        self.llm_explicit_directive = "Now please propose a new requirement (exactly one)."
+
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
@@ -30,9 +32,11 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
         print("I am: " + self._description)
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
 
+
+
         prompt = (  f"Initial specification:" + self.get_belief_by_tag(spec_tag) +" ;" +
                     f" List of atomic requirements: " + self.get_belief_by_tag(req_list_tag) +
-                    "Now please propose a new requirement (exactly one).")
+                    self.llm_explicit_directive)
         llm_result = await self._model_client.create(
             messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
             cancellation_token=ctx.cancellation_token,
