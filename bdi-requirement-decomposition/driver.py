@@ -32,6 +32,7 @@ async def main():
         # api_key="GEMINI_API_KEY",
     )
 
+    # update model_client below to change the LLM model
     model_client = model_client_1
 
     runtime = SingleThreadedAgentRuntime()
