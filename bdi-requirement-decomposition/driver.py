@@ -13,6 +13,8 @@ from DecomposerAgent import DecomposerAgent
 from LooperAgent import LooperAgent
 from RequirementValidatorAgent import *
 
+from dotenv import load_dotenv
+load_dotenv()
 
 async def main():
 
