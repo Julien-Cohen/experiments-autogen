@@ -7,12 +7,13 @@ from Message import *
 class LooperAgent(RoutedAgent):
 
     def __init__(self) -> None:
-        super().__init__("A user agent that outputs the intention to the user.")
+        super().__init__("A Looper agent (Algorithmic).")
 
     @message_handler
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
         print(f"{'-' * 80}")
-        print("I am the Looper agent (Algorithmic), my goal is to decide to stop because of incorrect behavior.")
+        print("I am: " + self._description +
+              " My goal is to decide to stop because of incorrect behavior.")
         print("I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation.")
         print(f"You described the following specification:\n {message.initial_desription}\n")
         print(f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n")

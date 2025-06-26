@@ -11,7 +11,7 @@ class RequirementValidatorAgent(LLMRoutedAgent):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("An option validator agent.", "You are a requirement validator.")
+        super().__init__("A Requirement Validator agent (with LLM).", "You are a requirement validator.")
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
@@ -36,7 +36,7 @@ class RequirementValidatorAgent(LLMRoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         print(f"{'-' * 80}")
-        print("I am the Validator Agent (LLM).")
+        print("I am: " + self._description)
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
         print("Here is its answer.")
         print(f"{'-' * 80}")

@@ -10,7 +10,7 @@ class RequirementManagerAgent(LLMRoutedAgent):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("An requirement generator agent.", "You are a requirement manager.")
+        super().__init__("A Requirement Manager agent (with LLM).", "You are a requirement manager.")
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
@@ -33,7 +33,7 @@ class RequirementManagerAgent(LLMRoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         print(f"{'-'*80}")
-        print("I am the Requirement Manager agent (LLM).")
+        print("I am: " + self._description)
         print("I received the initial specification and the list of atomic requirements and passed them to the LLM to tell if the specification is well covered.")
         print(f"The current list of atomic requirements is:" + message.current_list)
         print("Here is its answer. (NO means not covered yet, YES means well covered)")

@@ -10,7 +10,7 @@ class DecomposerAgent(LLMRoutedAgent):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("An decomposer agent.", "You are a decomposer. ")
+        super().__init__("A decomposer agent (with LLM).", "You are a decomposer.")
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
@@ -22,7 +22,7 @@ class DecomposerAgent(LLMRoutedAgent):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
-        prompt = (  f"Initial specification: {message.initial_desription} ;"\
+        prompt = (  f"Initial specification: {message.initial_desription} ;"
                     f" List of atomic requirements: {message.current_list}"
                     "Now please propose a new requirement (exactly one).")
         llm_result = await self._model_client.create(
@@ -32,7 +32,7 @@ class DecomposerAgent(LLMRoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         print(f"{'-' * 80}")
-        print("I am the Decomposer agent (LLM).")
+        print("I am: " + self._description)
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
         print("Here is its answer.")
         print(f"{'-' * 80}")
