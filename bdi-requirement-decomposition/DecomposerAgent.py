@@ -23,15 +23,15 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
-        self.add_belief(message.initial_desription, "SPEC") #FIXME : the initial description never changes
-        self.add_belief(message.current_list, "REQ_LIST")
+        bdi_eat_message(self,message)
+
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
 
-        prompt = (  f"Initial specification:" + self.get_belief_by_tag("SPEC") +" ;" +
-                    f" List of atomic requirements: " + self.get_belief_by_tag("REQ_LIST") +
+        prompt = (  f"Initial specification:" + self.get_belief_by_tag(spec_tag) +" ;" +
+                    f" List of atomic requirements: " + self.get_belief_by_tag(req_list_tag) +
                     "Now please propose a new requirement (exactly one).")
         llm_result = await self._model_client.create(
             messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
@@ -46,7 +46,7 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
         print(response)
         print(f"{'-' * 80}\n")
 
-        await self.publish_message(Message(initial_desription=self.get_belief_by_tag("SPEC"),
-                                           current_list=self.get_belief_by_tag("REQ_LIST"),
+        await self.publish_message(Message(initial_desription=self.get_belief_by_tag(spec_tag),
+                                           current_list=self.get_belief_by_tag(req_list_tag),
                                            atomic_requirement_tentative=self.intention),
                                    topic_id=TopicId(validation_request_topic_type, source=self.id.key))

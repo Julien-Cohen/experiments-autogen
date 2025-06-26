@@ -5,7 +5,7 @@ from Message import *
 from LLMRoutedAgent import *
 
 @type_subscription(topic_type=init_topic_type)
-class RequirementManagerAgent(LLMRoutedAgent):
+class RequirementManagerAgent(LLMRoutedAgent, BDIData):
 
 
 
@@ -23,6 +23,7 @@ class RequirementManagerAgent(LLMRoutedAgent):
 
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
+        bdi_eat_message(self, message)
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
@@ -51,6 +52,6 @@ class RequirementManagerAgent(LLMRoutedAgent):
         else:
             print ("(Continue)")
             print(f"{'-' * 80}\n")
-            await self.publish_message(Message(initial_desription= message.initial_desription,
-                                               current_list=message.current_list),
+            await self.publish_message(Message(initial_desription= self.get_belief_by_tag(spec_tag),
+                                               current_list=self.get_belief_by_tag(req_list_tag)),
                                        topic_id=TopicId(cut_request_topic_type, source=self.id.key))

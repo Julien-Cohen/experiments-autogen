@@ -6,7 +6,7 @@ from Message import *
 from LLMRoutedAgent import *
 
 @type_subscription(topic_type=validation_request_topic_type)
-class RequirementValidatorAgent(LLMRoutedAgent):
+class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
 
 
@@ -25,13 +25,15 @@ class RequirementValidatorAgent(LLMRoutedAgent):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
-        the_list = message.current_list if message.current_list != "" else "EMPTY"
+        bdi_eat_message(self, message)
+
+        the_list = self.get_belief_by_tag(req_list_tag) if self.get_belief_by_tag(req_list_tag) != "" else "EMPTY" # fixme
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
 
-        prompt = f"Initial specification: {message.initial_desription} ;"\
+        prompt = f"Initial specification:"+ self.get_belief_by_tag(spec_tag) +" ;"\
                  f" Current atomic requirements: {the_list} ;"\
                  f" New atomic requirement to validate: {message.atomic_requirement_tentative}"
         llm_result = await self._model_client.create(
@@ -49,8 +51,8 @@ class RequirementValidatorAgent(LLMRoutedAgent):
         answer_bool = response.startswith("CORRECT")
         
 
-        await self.publish_message(Message(initial_desription=message.initial_desription,
-                                           current_list=message.current_list,
+        await self.publish_message(Message(initial_desription=self.get_belief_by_tag(spec_tag),
+                                           current_list= self.get_belief_by_tag(req_list_tag),
                                            atomic_requirement_tentative=message.atomic_requirement_tentative,
                                            validation=str(answer_bool)),
                                    topic_id=TopicId(validation_result_topic_type, source=self.id.key))
