@@ -32,7 +32,7 @@ async def main():
         # api_key="GEMINI_API_KEY",
     )
 
-    model_client = model_client_2
+    model_client = model_client_1
 
     runtime = SingleThreadedAgentRuntime()
 
