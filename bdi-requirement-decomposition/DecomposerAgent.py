@@ -4,9 +4,10 @@ from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 from Message import *
 
 from LLMRoutedAgent import *
+from BDIData import *
 
 @type_subscription(topic_type=cut_request_topic_type)
-class DecomposerAgent(LLMRoutedAgent):
+class DecomposerAgent(LLMRoutedAgent, BDIData):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
@@ -22,8 +23,10 @@ class DecomposerAgent(LLMRoutedAgent):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
-        prompt = (  f"Initial specification: {message.initial_desription} ;"
-                    f" List of atomic requirements: {message.current_list}"
+        self.context_belief = message.initial_desription
+        self.retrieved_belief = message.current_list
+        prompt = (  f"Initial specification: {self.context_belief} ;"
+                    f" List of atomic requirements: {self.retrieved_belief}"
                     "Now please propose a new requirement (exactly one).")
         llm_result = await self._model_client.create(
             messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
@@ -31,6 +34,7 @@ class DecomposerAgent(LLMRoutedAgent):
         )
         response = llm_result.content
         assert isinstance(response, str)
+        self.intention = response
         print(f"{'-' * 80}")
         print("I am: " + self._description)
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
@@ -39,7 +43,7 @@ class DecomposerAgent(LLMRoutedAgent):
         print(response)
         print(f"{'-' * 80}\n")
 
-        await self.publish_message(Message(initial_desription=message.initial_desription,
-                                           current_list=message.current_list,
-                                           atomic_requirement_tentative=response),
+        await self.publish_message(Message(initial_desription=self.context_belief,
+                                           current_list=self.retrieved_belief,
+                                           atomic_requirement_tentative=self.intention),
                                    topic_id=TopicId(validation_request_topic_type, source=self.id.key))

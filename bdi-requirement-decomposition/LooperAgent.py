@@ -13,7 +13,7 @@ class LooperAgent(RoutedAgent):
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
         print(f"{'-' * 80}")
         print("I am: " + self._description +
-              " My goal is to decide to stop because of incorrect behavior.")
+              " My goal is to re-launch the process, with a convenient list of atomic requirements.")
         print("I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation.")
         print(f"You described the following specification:\n {message.initial_desription}\n")
         print(f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n")
