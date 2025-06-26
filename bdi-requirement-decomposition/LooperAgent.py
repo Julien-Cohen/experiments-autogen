@@ -8,7 +8,8 @@ from BDIData import *
 class LooperAgent(RoutedAgent, BDIData):
 
     def __init__(self) -> None:
-        super().__init__("A Looper agent (Algorithmic).")
+        RoutedAgent.__init__(self, "A Looper agent (Algorithmic).")
+        BDIData.__init__(self)
 
         self.desire.append("Pass to the manager a list of requirement complete.")
         self.desire.append("Pass to the manager a list of requirement correct.")
@@ -20,6 +21,9 @@ class LooperAgent(RoutedAgent, BDIData):
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
+
+        print(self.report_bdi())
+
         print("My goal is to re-launch the process, with a convenient list of atomic requirements.")
         print("I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation.")
         print(f"You described the following specification:\n" + self.get_belief_by_tag(spec_tag) +"\n")
@@ -34,7 +38,8 @@ class LooperAgent(RoutedAgent, BDIData):
         new_list = self.get_belief_by_tag(req_list_tag) + " \n * " + message.atomic_requirement_tentative if bool(message.validation) else self.get_belief_by_tag(req_list_tag)
 
         if message.validation :
-            await self.publish_message(Message(initial_desription=self.get_belief_by_tag(spec_tag), current_list=new_list ),
+            await self.publish_message(Message(initial_desription=self.get_belief_by_tag(spec_tag),
+                                               current_list=new_list ),
                                        topic_id=TopicId(init_topic_type, source=self.id.key))
 
 

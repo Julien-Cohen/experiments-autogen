@@ -11,7 +11,9 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("A decomposer agent (with LLM).", "You are a decomposer.")
+        LLMRoutedAgent.__init__(self, "A decomposer agent (with LLM).", "You are a decomposer.")
+        BDIData.__init__(self)
+
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
@@ -27,11 +29,15 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
+
         bdi_observe_message(self, message)
+        self.intention = ""
 
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
+        print(self.report_bdi())
+
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
 
 

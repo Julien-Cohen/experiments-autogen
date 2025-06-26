@@ -1,10 +1,19 @@
 from asyncio import InvalidStateError
 
+from dataclasses import dataclass
 
+@dataclass
 class BDIData:
-    belief = []
-    desire = []
-    intention = None
+    belief : list[str]
+    desire : list[str]
+    intention : str
+
+    def __init__(self):
+        self.belief = list()
+        self.desire = list()
+        self.reset_intention()
+
+
 
     def add_belief(self, data : str, tag : str):
         self.belief.insert(0, (data, tag)) # insert at head
@@ -27,3 +36,12 @@ class BDIData:
 
     def set_intention(self, i:str):
         self.intention = i
+
+    def report_bdi(self):
+        return (
+                "BELIEF= " + str(self.belief) +"\n"
+                "DESIRE= " + str (self.desire) + "\n" 
+                "INTENTION= " + str(self.intention) + "\n")
+
+    def reset_intention(self):
+        self.intention = ""

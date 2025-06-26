@@ -8,10 +8,10 @@ from LLMRoutedAgent import *
 @type_subscription(topic_type=validation_request_topic_type)
 class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
-
-
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("A Requirement Validator agent (with LLM).", "You are a requirement validator.")
+        LLMRoutedAgent.__init__(self, "A Requirement Validator agent (with LLM).", "You are a requirement validator.")
+        BDIData.__init__(self)
+
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
@@ -36,6 +36,7 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
+        print(self.report_bdi())
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
 
         prompt = (f"Initial specification:"+ self.get_belief_by_tag(spec_tag) +" ;"

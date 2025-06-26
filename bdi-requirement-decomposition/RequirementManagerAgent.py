@@ -7,10 +7,10 @@ from LLMRoutedAgent import *
 @type_subscription(topic_type=init_topic_type)
 class RequirementManagerAgent(LLMRoutedAgent, BDIData):
 
-
-
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("A Requirement Manager agent (with LLM).", "You are a requirement manager.")
+        LLMRoutedAgent.__init__(self, description="A Requirement Manager agent (with LLM).", role="You are a requirement manager.")
+        BDIData.__init__(self)
+
         self._system_message = SystemMessage(
             content=(
                 self.llm_role +
@@ -30,6 +30,8 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
+        print(self.report_bdi())
+
         print("I received the initial specification and the list of atomic requirements")
         print("I pass them to the LLM to tell if the specification is well covered.")
         print(f"The current list of atomic requirements is:" + message.current_list)
