@@ -40,7 +40,7 @@ class RequirementValidatorAgent(RoutedAgent):
         print(f"{'-' * 80}\n")
 
         answer_bool = response.startswith("CORRECT")
-        print (f"validation (boolean): {answer_bool}")
+        
 
         await self.publish_message(Message(initial_desription=message.initial_desription,
                                            current_list=message.current_list,

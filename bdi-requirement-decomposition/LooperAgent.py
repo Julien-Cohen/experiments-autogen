@@ -26,7 +26,7 @@ class LooperAgent(RoutedAgent):
         print(f"{'-' * 80}\n")
 
         if message.validation :
-            await self.publish_message(Message(initial_desription=message.initial_desription, current_list=message.current_list + " ; " + message.atomic_requirement_tentative),
+            await self.publish_message(Message(initial_desription=message.initial_desription, current_list=message.current_list + " \n * " + message.atomic_requirement_tentative ),
                                        topic_id=TopicId(init_topic_type, source=self.id.key))
 
         print ("Continue" if message.validation else "Stop")
