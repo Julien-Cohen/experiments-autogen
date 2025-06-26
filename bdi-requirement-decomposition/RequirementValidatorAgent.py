@@ -26,6 +26,11 @@ class RequirementValidatorAgent(LLMRoutedAgent):
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
         the_list = message.current_list if message.current_list != "" else "EMPTY"
+
+        print(f"{'-' * 80}")
+        print("I am: " + self._description)
+        print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
+
         prompt = f"Initial specification: {message.initial_desription} ;"\
                  f" Current atomic requirements: {the_list} ;"\
                  f" New atomic requirement to validate: {message.atomic_requirement_tentative}"
@@ -35,9 +40,7 @@ class RequirementValidatorAgent(LLMRoutedAgent):
         )
         response = llm_result.content
         assert isinstance(response, str)
-        print(f"{'-' * 80}")
-        print("I am: " + self._description)
-        print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
+
         print("Here is its answer.")
         print(f"{'-' * 80}")
         print(response)

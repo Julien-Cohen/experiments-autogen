@@ -26,6 +26,10 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
         self.add_belief(message.initial_desription, "SPEC") #FIXME : the initial description never changes
         self.add_belief(message.current_list, "REQ_LIST")
 
+        print(f"{'-' * 80}")
+        print("I am: " + self._description)
+        print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
+
         prompt = (  f"Initial specification:" + self.get_belief_by_tag("SPEC") +" ;" +
                     f" List of atomic requirements: " + self.get_belief_by_tag("REQ_LIST") +
                     "Now please propose a new requirement (exactly one).")
@@ -36,9 +40,7 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
         response = llm_result.content
         assert isinstance(response, str)
         self.intention = response
-        print(f"{'-' * 80}")
-        print("I am: " + self._description)
-        print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
+
         print("Here is its answer.")
         print(f"{'-' * 80}")
         print(response)

@@ -23,6 +23,13 @@ class RequirementManagerAgent(LLMRoutedAgent):
 
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
+
+        print(f"{'-' * 80}")
+        print("I am: " + self._description)
+        print("I received the initial specification and the list of atomic requirements")
+        print("I pass them to the LLM to tell if the specification is well covered.")
+        print(f"The current list of atomic requirements is:" + message.current_list)
+
         the_list = message.current_list if message.current_list != "" else "EMPTY"
         prompt = (f"This is the specification of the system: {message.initial_desription}"
                   f"This is the list of atomic requirements: {the_list}")
@@ -32,10 +39,7 @@ class RequirementManagerAgent(LLMRoutedAgent):
         )
         response = llm_result.content
         assert isinstance(response, str)
-        print(f"{'-'*80}")
-        print("I am: " + self._description)
-        print("I received the initial specification and the list of atomic requirements and passed them to the LLM to tell if the specification is well covered.")
-        print(f"The current list of atomic requirements is:" + message.current_list)
+
         print("Here is its answer. (NO means not covered yet, YES means well covered)")
 
         print(f"{'-' * 80}")
