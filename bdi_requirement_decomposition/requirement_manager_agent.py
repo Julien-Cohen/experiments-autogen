@@ -35,8 +35,6 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
 
-        the_list = message.current_list if message.current_list != "" else "EMPTY"
-
         print(f"{'-' * 80}")
         print(str(self))
 
@@ -46,9 +44,20 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print("I pass them to the LLM to tell if the specification is well covered.")
         print(f"The current list of atomic requirements is:" + message.current_list)
 
+        await self.bdi_select_intention(ctx)
+
+        await self.bdi_act(ctx)
+
+    def bdi_observe_message(self, message):
+        message__bdi_observe_message(self, message)
+
+    async def bdi_select_intention(self, ctx):
+        l = self.get_belief_by_tag(req_list_tag)
+        the_list = l if l != "" else "EMPTY"
+
         prompt = (
-            f"This is the specification of the system: {message.initial_desription}"
-            f"This is the list of atomic requirements: {the_list}"
+            f"This is the specification of the system: {self.get_belief_by_tag(spec_tag)}"
+            f"This is the list of atomic requirements: {l}"
             + self.llm_explicit_directive
         )
         llm_result = await self._model_client.create(
@@ -66,14 +75,16 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print(f"{'-' * 80}")
 
         if response.startswith("COMPLETE"):
-            self.set_intention("Stop (success).", message.current_list)
+            self.set_intention("STOP", l)
             print("(End)")
         else:
-            self.set_intention(
-                "Continue, ask the decomposer agent.", message.current_list
-            )
+            self.set_intention("PASS", l)
             print("(Continue)")
             print(f"{'-' * 80}\n")
+
+    async def bdi_act(self, ctx):
+        (a, b) = self.intention
+        if a == "PASS":
             await self.publish_message(
                 Message(
                     initial_desription=self.get_belief_by_tag(spec_tag),
@@ -81,12 +92,5 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
                 ),
                 topic_id=TopicId(cut_request_topic_type, source=self.id.key),
             )
-
-    def bdi_observe_message(self, message):
-        message__bdi_observe_message(self, message)
-
-    def bdi_select_intention(self, ctx):
-        pass  # fixme
-
-    def bdi_act(self, ctx):
-        pass  # fixme
+        else:
+            print(b)

@@ -33,12 +33,13 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         self.desire.append(
             "Ensure that the new requirement is not already taken into account."
         )
+        self.candidate = None
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
 
-        candidate = message.atomic_requirement_tentative
+        self.candidate = message.atomic_requirement_tentative
 
         the_list = (
             self.get_belief_by_tag(req_list_tag)
@@ -55,7 +56,7 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         prompt = (
             f"Initial specification:" + self.get_belief_by_tag(spec_tag) + " ;"
             f" Current atomic requirements: {the_list} ;"
-            f" New atomic requirement to validate: {candidate} "
+            f" New atomic requirement to validate: {self.candidate} "
             + self.llm_explicit_directive
         )
         llm_result = await self._model_client.create(
@@ -82,7 +83,7 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
             Message(
                 initial_desription=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=candidate,
+                atomic_requirement_tentative=self.candidate,
                 validation=str(answer_bool),
             ),
             topic_id=TopicId(validation_result_topic_type, source=self.id.key),

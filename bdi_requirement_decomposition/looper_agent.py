@@ -1,7 +1,5 @@
 from autogen_core import (
     type_subscription,
-    RoutedAgent,
-    message_handler,
     MessageContext,
     TopicId,
 )
@@ -21,66 +19,61 @@ class LooperAgent(BDIRoutedAgent):
         self.desire.append(
             "Pass to the manager a list of requirements without redundancy."
         )
+        self.candidate = None
+        self.validation = None
 
     @message_handler
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
-        bdi_observe_message(self, message)
-        candidate = message.atomic_requirement_tentative
-        self.set_intention(
-            "Consider the result of the analysis I receive, build a new list accordingly, and transmit it to the manager.",
-            message.validation,
-        )
+        self.bdi_observe_message(message)
 
         print(f"{'-' * 80}")
-
         print(str(self))
 
-        print(
-            "My goal is to re-launch the process, with a convenient list of atomic requirements."
-        )
-        print(
-            "I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation."
-        )
         print(
             f"You described the following specification:\n"
             + self.get_belief_by_tag(spec_tag)
             + "\n"
         )
-        print(f"We consider the following atomic requirement:\n {candidate}\n")
-        print(f"Validation: {message.validation}")
-        if bool(message.validation):
-            self.set_intention(
-                "Add this requirement to the list of considered requirements and notify the manager.",
-                candidate,
-            )
-        else:
-            self.set_intention(
-                "Do not add this requirement to the list of considered requirements and notify the manager.",
-                candidate,
-            )
+
+        print(f"We consider the following atomic requirement:\n {self.candidate}\n")
+        print(f"Validation: {self.validation}")
+
+        self.bdi_select_intention(ctx)
 
         print(f"{'-' * 80}\n")
 
-        new_list = (
-            self.get_belief_by_tag(req_list_tag) + " \n * " + candidate
-            if bool(message.validation)
-            else self.get_belief_by_tag(req_list_tag)
-        )
-
-        await self.publish_message(
-            Message(
-                initial_desription=self.get_belief_by_tag(spec_tag),
-                current_list=new_list,
-            ),
-            topic_id=TopicId(init_topic_type, source=self.id.key),
-        )
-        # self.clear_intention()
+        await self.bdi_act(ctx)
 
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
+        self.candidate = message.atomic_requirement_tentative
+        self.validation = bool(message.validation)
 
     def bdi_select_intention(self, ctx):
-        pass  # fixme
 
-    def bdi_act(self, ctx):
-        pass  # fixme
+        new_list = (
+            self.get_belief_by_tag(req_list_tag) + " \n * " + self.candidate
+            if self.validation
+            else self.get_belief_by_tag(req_list_tag)
+        )
+
+        if self.validation:
+            self.set_intention(
+                "Pass the list with the new requirement.",
+                new_list,
+            )
+        else:
+            self.set_intention(
+                "Pass the list without the new requirement.",
+                new_list,
+            )
+
+    async def bdi_act(self, ctx):
+        (a, b) = self.intention
+        await self.publish_message(
+            Message(
+                initial_desription=self.get_belief_by_tag(spec_tag),
+                current_list=b,
+            ),
+            topic_id=TopicId(init_topic_type, source=self.id.key),
+        )
