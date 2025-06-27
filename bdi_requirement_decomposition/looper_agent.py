@@ -1,15 +1,14 @@
 from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
 
 from message import *
-from BDI_data import *
+from BDI_routed_agent import *
 
 
 @type_subscription(topic_type=validation_result_topic_type)
-class LooperAgent(RoutedAgent, BDIData):
+class LooperAgent(BDIRoutedAgent):
 
     def __init__(self) -> None:
-        RoutedAgent.__init__(self, "A Looper agent (Algorithmic).")
-        BDIData.__init__(self)
+        super().__init__("A Looper agent (Algorithmic).")
 
         self.desire.append("Pass to the manager a list of requirement complete.")
         self.desire.append("Pass to the manager a list of requirement correct.")
@@ -20,7 +19,6 @@ class LooperAgent(RoutedAgent, BDIData):
         bdi_observe_message(self, message)
 
         print(f"{'-' * 80}")
-        print("I am: " + self._description)
 
         print(str(self))
 
@@ -42,6 +40,3 @@ class LooperAgent(RoutedAgent, BDIData):
                                                current_list=new_list ),
                                        topic_id=TopicId(init_topic_type, source=self.id.key))
 
-
-    def __str__(self) :
-        return BDIData.__str__(self)

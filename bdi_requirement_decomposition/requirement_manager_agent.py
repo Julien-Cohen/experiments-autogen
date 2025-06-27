@@ -2,14 +2,13 @@ from autogen_core import type_subscription, RoutedAgent, message_handler, Messag
 from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from message import *
-from LLM_routed_agent import *
+from LLM_BDI_routed_agent import *
 
 @type_subscription(topic_type=init_topic_type)
-class RequirementManagerAgent(LLMRoutedAgent, BDIData):
+class RequirementManagerAgent(LLMBDIRoutedAgent):
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        LLMRoutedAgent.__init__(self, description="A Requirement Manager agent (with LLM).", role="You are a requirement manager.")
-        BDIData.__init__(self)
+        super().__init__(description="A Requirement Manager agent (with LLM).", role="You are a requirement manager.")
 
         self._system_message = SystemMessage(
             content=(
@@ -29,7 +28,6 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
         bdi_observe_message(self, message)
 
         print(f"{'-' * 80}")
-        print("I am: " + self._description)
         print(str(self))
 
         print("I received the initial specification and the list of atomic requirements")
@@ -62,5 +60,3 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
                                                current_list=self.get_belief_by_tag(req_list_tag)),
                                        topic_id=TopicId(cut_request_topic_type, source=self.id.key))
 
-    def __str__(self):
-        return BDIData.__str__(self)

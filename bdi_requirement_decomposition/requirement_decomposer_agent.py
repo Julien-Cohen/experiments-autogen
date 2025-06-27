@@ -3,16 +3,15 @@ from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from message import *
 
-from LLM_routed_agent import *
-from BDI_data import *
+from LLM_BDI_routed_agent import *
 
 @type_subscription(topic_type=cut_request_topic_type)
-class RequirementDecomposerAgent(LLMRoutedAgent, BDIData):
+class RequirementDecomposerAgent(LLMBDIRoutedAgent):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        LLMRoutedAgent.__init__(self, "A decomposer agent (with LLM).", "You are a decomposer.")
-        BDIData.__init__(self)
+        super().__init__("A decomposer agent (with LLM).", "You are a decomposer.")
+
 
         self._system_message = SystemMessage(
             content=(
@@ -35,7 +34,6 @@ class RequirementDecomposerAgent(LLMRoutedAgent, BDIData):
 
 
         print(f"{'-' * 80}")
-        print("I am: " + self._description)
         print(str(self))
 
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
@@ -63,5 +61,3 @@ class RequirementDecomposerAgent(LLMRoutedAgent, BDIData):
                                            atomic_requirement_tentative=self.intention),
                                    topic_id=TopicId(validation_request_topic_type, source=self.id.key))
 
-    def __str__(self) :
-        return BDIData.__str__(self)

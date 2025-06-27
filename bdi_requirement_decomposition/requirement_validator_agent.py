@@ -3,14 +3,13 @@ from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from message import *
 
-from LLM_routed_agent import *
+from LLM_BDI_routed_agent import *
 
 @type_subscription(topic_type=validation_request_topic_type)
-class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
+class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        LLMRoutedAgent.__init__(self, "A Requirement Validator agent (with LLM).", "You are a requirement validator.")
-        BDIData.__init__(self)
+        super().__init__("A Requirement Validator agent (with LLM).", "You are a requirement validator.")
 
         self._system_message = SystemMessage(
             content=(
@@ -35,7 +34,6 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
         the_list = self.get_belief_by_tag(req_list_tag) if self.get_belief_by_tag(req_list_tag) != "" else "EMPTY" # fixme
 
         print(f"{'-' * 80}")
-        print("I am: " + self._description)
         print(str(self))
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
 
@@ -64,5 +62,3 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
                                            validation=str(answer_bool)),
                                    topic_id=TopicId(validation_result_topic_type, source=self.id.key))
 
-    def __str__(self):
-        return BDIData.__str__(self)
