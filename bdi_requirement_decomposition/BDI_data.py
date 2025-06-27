@@ -7,7 +7,7 @@ from dataclasses import dataclass
 class BDIData:
     belief: list[str]
     desire: list[str]
-    intention: str
+    intention: (str, str)
 
     def __init__(self):
         self.belief = list()
@@ -33,11 +33,11 @@ class BDIData:
                 return a
         raise InvalidStateError
 
-    def set_intention(self, i: str):
-        self.intention = i
+    def set_intention(self, action: str, data: str):
+        self.intention = (action, data)
 
     def reset_intention(self):
-        self.intention = ""
+        self.intention = None
 
     def __str__(self):
         return (
@@ -53,7 +53,11 @@ class BDIData:
         return "BELIEF= " + str(self.belief)
 
     def format_intention(self):
-        return "INTENTION= " + str(self.intention)
+        if self.intention is not None:
+            (a, b) = self.intention
+            return "INTENTION= " + a + " :: " + b
+        else:
+            return "INTENTION= _"
 
     def format_desire(self):
         return "DESIRE= " + str(self.desire)

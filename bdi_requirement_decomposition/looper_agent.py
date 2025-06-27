@@ -25,6 +25,7 @@ class LooperAgent(BDIRoutedAgent):
     @message_handler
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
         bdi_observe_message(self, message)
+        candidate = message.atomic_requirement_tentative
 
         print(f"{'-' * 80}")
 
@@ -41,25 +42,23 @@ class LooperAgent(BDIRoutedAgent):
             + self.get_belief_by_tag(spec_tag)
             + "\n"
         )
-        print(
-            f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n"
-        )
+        print(f"We consider the following atomic requirement:\n {candidate}\n")
         print(f"Validation: {message.validation}")
         if bool(message.validation):
             self.set_intention(
-                "Add the received requirement to the list of considered requirements and notify the manager."
+                "Add this requirement to the list of considered requirements and notify the manager.",
+                candidate,
             )
         else:
             self.set_intention(
-                "Do not add the received requirement to the list of considered requirements and notify the manager."
+                "Do not add this requirement to the list of considered requirements and notify the manager.",
+                candidate,
             )
 
         print(f"{'-' * 80}\n")
 
         new_list = (
-            self.get_belief_by_tag(req_list_tag)
-            + " \n * "
-            + message.atomic_requirement_tentative
+            self.get_belief_by_tag(req_list_tag) + " \n * " + candidate
             if bool(message.validation)
             else self.get_belief_by_tag(req_list_tag)
         )

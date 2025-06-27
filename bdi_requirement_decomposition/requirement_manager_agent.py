@@ -49,6 +49,12 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print(f"The current list of atomic requirements is:" + message.current_list)
 
         the_list = message.current_list if message.current_list != "" else "EMPTY"
+
+        self.set_intention(
+            "Consult an LLM to check if the set of requirements cover well the specification.",
+            the_list,
+        )
+
         prompt = (
             f"This is the specification of the system: {message.initial_desription}"
             f"This is the list of atomic requirements: {the_list}"
@@ -71,8 +77,12 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print(f"{'-' * 80}")
 
         if response.startswith("YES"):
+            self.set_intention("Stop (success).", message.current_list)
             print("(End)")
         else:
+            self.set_intention(
+                "Continue, ask the decomposer agent.", message.current_list
+            )
             print("(Continue)")
             print(f"{'-' * 80}\n")
             await self.publish_message(

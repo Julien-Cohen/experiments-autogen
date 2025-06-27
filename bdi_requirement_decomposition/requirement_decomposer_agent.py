@@ -38,7 +38,6 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
 
         bdi_observe_message(self, message)
-        self.reset_intention()
 
         print(f"{'-' * 80}")
         print(str(self))
@@ -46,6 +45,8 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         print(
             "I received the initial specification and the list of atomic requirements and I passed them to the LLM."
         )
+
+        self.set_intention("Consult an LLM to generate new requirements.", "---")
 
         prompt = (
             f"Initial specification:"
@@ -64,7 +65,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         )
         response = llm_result.content
         assert isinstance(response, str)
-        self.set_intention(response)
+        self.set_intention("Pass this proposal to the validation agent.", response)
 
         print("Here is its answer.")
         print(f"{'-' * 80}")
@@ -75,7 +76,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
             Message(
                 initial_desription=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=self.intention,
+                atomic_requirement_tentative=response,
             ),
             topic_id=TopicId(validation_request_topic_type, source=self.id.key),
         )
