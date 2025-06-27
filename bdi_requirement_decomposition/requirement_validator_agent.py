@@ -39,14 +39,13 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
 
-        self.candidate = message.atomic_requirement_tentative
-
         await self.bdi_select_intention(ctx)
 
         await self.bdi_act(ctx)
 
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
+        self.candidate = message.atomic_requirement_tentative
 
     async def bdi_select_intention(self, ctx):
         the_list = (
