@@ -39,7 +39,6 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
 
 
-
         prompt = (  f"Initial specification:" + self.get_belief_by_tag(spec_tag) +" ;" +
                     f" List of atomic requirements: " + self.get_belief_by_tag(req_list_tag) +
                     self.llm_explicit_directive)
