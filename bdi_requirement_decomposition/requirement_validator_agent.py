@@ -1,11 +1,10 @@
 from autogen_core import (
     type_subscription,
-    RoutedAgent,
     message_handler,
     MessageContext,
     TopicId,
 )
-from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
+from autogen_core.models import UserMessage
 
 from message import *
 
@@ -17,20 +16,17 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
         super().__init__(
-            "A Requirement Validator agent (with LLM).",
-            "You are a requirement validator.",
-        )
-
-        self._system_message = SystemMessage(
-            content=(
-                self.llm_role
-                + " Given an initial specification of a system, a list of atomic requirements for that system, and a new atomic requirement,"
+            model_client=model_client,
+            description="Requirement Validator agent (with LLM).",
+            role="You are a requirement validator.",
+            job_desciption=(
+                "Given an initial specification of a system, a list of atomic requirements for that system, and a new atomic requirement,"
                 " validate that this new requirement is correct with respect to the initial specification, is not redundant with the atomic requirements already listed, and is not contradictory with the atomic requirements already listed."
                 " Start your answer with CORRECT if you validate."
                 " Start your answer with INCORRECT otherwise, and explain in your answer why it is not valid."
-            )
+            ),
         )
-        self._model_client = model_client
+
         self.llm_explicit_directive = "Do you validate this?"
 
         self.desire.append("Ensure that the new requirement is correct.")

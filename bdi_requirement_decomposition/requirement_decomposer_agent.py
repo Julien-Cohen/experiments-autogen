@@ -1,11 +1,10 @@
 from autogen_core import (
     type_subscription,
-    RoutedAgent,
     message_handler,
     MessageContext,
     TopicId,
 )
-from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
+from autogen_core.models import UserMessage
 
 from message import *
 
@@ -16,16 +15,15 @@ from LLM_BDI_routed_agent import *
 class RequirementDecomposerAgent(LLMBDIRoutedAgent):
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__("A decomposer agent (with LLM).", "You are a decomposer.")
-
-        self._system_message = SystemMessage(
-            content=(
-                self.llm_role
-                + " You receive a specification of a system, and a list of atomic requirements about that system."
+        super().__init__(
+            model_client=model_client,
+            description="Decomposer agent (with LLM).",
+            role="You are a decomposer.",
+            job_desciption=(
+                "You receive a specification of a system, and a list of atomic requirements about that system."
                 " You have to identify exactly one requirements that is related to the received specification and which is not in the list of atomic requirements."
-            )
+            ),
         )
-        self._model_client = model_client
 
         self.llm_explicit_directive = (
             "Now please propose a new requirement (exactly one)."

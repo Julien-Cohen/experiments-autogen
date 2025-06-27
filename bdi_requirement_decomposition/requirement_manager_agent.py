@@ -1,11 +1,10 @@
 from autogen_core import (
     type_subscription,
-    RoutedAgent,
     message_handler,
     MessageContext,
     TopicId,
 )
-from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
+from autogen_core.models import UserMessage
 
 from message import *
 from LLM_BDI_routed_agent import *
@@ -16,19 +15,16 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
         super().__init__(
-            description="A Requirement Manager agent (with LLM).",
+            model_client=model_client,
+            description="Requirement Manager agent (with LLM).",
             role="You are a requirement manager.",
+            job_desciption=(
+                "Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
+                + " Answer YES is the specification is well covered."
+                + " Answer NO otherwise."
+            ),
         )
 
-        self._system_message = SystemMessage(
-            content=(
-                self.llm_role
-                + " Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
-                " Answer YES is the specification is well covered."
-                " Answer NO otherwise."
-            )
-        )
-        self._model_client = model_client
         self.llm_explicit_directive = "Do you think the specification if well covered ?"
 
         self.desire.append(
