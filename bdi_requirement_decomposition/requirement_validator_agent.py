@@ -1,9 +1,9 @@
 from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
 from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
-from Message import *
+from message import *
 
-from LLMRoutedAgent import *
+from LLM_routed_agent import *
 
 @type_subscription(topic_type=validation_request_topic_type)
 class RequirementValidatorAgent(LLMRoutedAgent, BDIData):

@@ -1,7 +1,7 @@
 from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
 
-from Message import *
-from BDIData import *
+from message import *
+from BDI_data import *
 
 
 @type_subscription(topic_type=validation_result_topic_type)

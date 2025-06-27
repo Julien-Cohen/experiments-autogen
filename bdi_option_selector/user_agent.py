@@ -1,6 +1,6 @@
 from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext
 
-from Message import *
+from message import *
 
 
 @type_subscription(topic_type=validated_topic_type)

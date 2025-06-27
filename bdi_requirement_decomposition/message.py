@@ -18,7 +18,7 @@ validation_result_topic_type = "VALIDATION_RES"
 init_topic_type = "INIT"
 
 
-from BDIData import *
+from BDI_data import *
 # Belief tags
 spec_tag = "SPEC"
 req_list_tag = "REQ_LIST"

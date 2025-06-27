@@ -7,10 +7,10 @@ from autogen_core import (
 )
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
-from OptionGeneratorAgent import OptionGeneratorAgent
-from OptionSelectorAgent import OptionSelectorAgent
-from UserAgent import UserAgent
-from OptionValidatorAgent import *
+from option_generator_agent import OptionGeneratorAgent
+from option_selector_agent import OptionSelectorAgent
+from user_agent import UserAgent
+from option_validator_agent import *
 
 
 async def main():

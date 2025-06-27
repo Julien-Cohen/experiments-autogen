@@ -1,10 +1,10 @@
 from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
 from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
-from Message import *
+from message import *
 
-from LLMRoutedAgent import *
-from BDIData import *
+from LLM_routed_agent import *
+from BDI_data import *
 
 @type_subscription(topic_type=cut_request_topic_type)
 class RequirementDecomposerAgent(LLMRoutedAgent, BDIData):

@@ -1,7 +1,7 @@
 from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
 from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
-from Message import option_topic_type, Message, intention_topic_type
+from message import option_topic_type, Message, intention_topic_type
 
 
 @type_subscription(topic_type=option_topic_type)

@@ -8,10 +8,10 @@ from autogen_core import (
 from autogen_core.models import ModelInfo
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
-from RequirementManagerAgent import RequirementManagerAgent
-from RequirementDecomposerAgent import RequirementDecomposerAgent
-from LooperAgent import LooperAgent
-from RequirementValidatorAgent import *
+from requirement_manager_agent import RequirementManagerAgent
+from requirement_decomposer_agent import RequirementDecomposerAgent
+from looper_agent import LooperAgent
+from requirement_validator_agent import *
 
 from dotenv import load_dotenv
 load_dotenv()
