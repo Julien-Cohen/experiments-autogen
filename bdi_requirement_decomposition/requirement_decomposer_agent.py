@@ -18,8 +18,8 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         super().__init__(
             model_client=model_client,
             description="Decomposer agent (with LLM).",
-            role="You are a decomposer.",
-            job_desciption=(
+            llm_role="You are a decomposer.",
+            llm_job_description=(
                 "You receive a specification of a system, and a list of atomic requirements about that system."
                 " You have to identify exactly one requirements that is related to the received specification and which is not in the list of atomic requirements."
             ),

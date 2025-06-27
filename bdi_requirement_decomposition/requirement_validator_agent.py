@@ -18,8 +18,8 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         super().__init__(
             model_client=model_client,
             description="Requirement Validator agent (with LLM).",
-            role="You are a requirement validator.",
-            job_desciption=(
+            llm_role="You are a requirement validator.",
+            llm_job_description=(
                 "Given an initial specification of a system, a list of atomic requirements for that system, and a new atomic requirement,"
                 " validate that this new requirement is correct with respect to the initial specification, is not redundant with the atomic requirements already listed, and is not contradictory with the atomic requirements already listed."
                 " Start your answer with CORRECT if you validate."

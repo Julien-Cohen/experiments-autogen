@@ -17,8 +17,8 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         super().__init__(
             model_client=model_client,
             description="Requirement Manager agent (with LLM).",
-            role="You are a requirement manager.",
-            job_desciption=(
+            llm_role="You are a requirement manager.",
+            llm_job_description=(
                 "Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
                 + " Answer YES is the specification is well covered."
                 + " Answer NO otherwise."
