@@ -41,6 +41,14 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
         self.candidate = message.atomic_requirement_tentative
 
+        await self.bdi_select_intention(ctx)
+
+        await self.bdi_act(ctx)
+
+    def bdi_observe_message(self, message):
+        message__bdi_observe_message(self, message)
+
+    async def bdi_select_intention(self, ctx):
         the_list = (
             self.get_belief_by_tag(req_list_tag)
             if self.get_belief_by_tag(req_list_tag) != ""
@@ -75,25 +83,16 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
         answer_bool = response.startswith("CORRECT")
 
-        self.set_intention(
-            "Communicate my analysis to the looper agent.", str(answer_bool)
-        )
+        self.set_intention("VALID" if answer_bool else "INVALID", self.candidate)
 
+    async def bdi_act(self, ctx):
+        (a, b) = self.intention
         await self.publish_message(
             Message(
                 initial_desription=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=self.candidate,
-                validation=str(answer_bool),
+                atomic_requirement_tentative=b,
+                validation=a,
             ),
             topic_id=TopicId(validation_result_topic_type, source=self.id.key),
         )
-
-    def bdi_observe_message(self, message):
-        message__bdi_observe_message(self, message)
-
-    def bdi_select_intention(self, ctx):
-        pass  # fixme
-
-    def bdi_act(self, ctx):
-        pass  # fixme

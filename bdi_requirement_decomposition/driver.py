@@ -46,7 +46,7 @@ async def main():
     from diskcache import Cache
 
     cache_store = DiskCacheStore[CHAT_CACHE_VALUE_TYPE](Cache("/tmp"))
-    cache_client = ChatCompletionCache(model_client_1, cache_store)
+    cache_client = ChatCompletionCache(model_client_2, cache_store)
 
     # update model_client below to change the LLM model
     model_client = cache_client
