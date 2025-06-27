@@ -14,7 +14,9 @@ from looper_agent import LooperAgent
 from requirement_validator_agent import *
 
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 async def main():
 
@@ -27,8 +29,13 @@ async def main():
 
     model_client_2 = OpenAIChatCompletionClient(
         model="gemini-2.0-flash-lite",
-        model_info=ModelInfo(vision=True, function_calling=True, json_output=True, family="unknown",
-                             structured_output=True)
+        model_info=ModelInfo(
+            vision=True,
+            function_calling=True,
+            json_output=True,
+            family="unknown",
+            structured_output=True,
+        ),
         # api_key="GEMINI_API_KEY",
     )
 
@@ -38,29 +45,40 @@ async def main():
     runtime = SingleThreadedAgentRuntime()
 
     await RequirementManagerAgent.register(
-        runtime, type=init_topic_type, factory=lambda: RequirementManagerAgent(model_client=model_client)
+        runtime,
+        type=init_topic_type,
+        factory=lambda: RequirementManagerAgent(model_client=model_client),
     )
     await RequirementDecomposerAgent.register(
-        runtime, type=cut_request_topic_type, factory=lambda: RequirementDecomposerAgent(model_client=model_client)
+        runtime,
+        type=cut_request_topic_type,
+        factory=lambda: RequirementDecomposerAgent(model_client=model_client),
     )
     await RequirementValidatorAgent.register(
-        runtime, type=validation_request_topic_type, factory=lambda: RequirementValidatorAgent(model_client=model_client)
+        runtime,
+        type=validation_request_topic_type,
+        factory=lambda: RequirementValidatorAgent(model_client=model_client),
     )
 
-    await LooperAgent.register(runtime, type=validation_result_topic_type, factory=lambda: LooperAgent())
+    await LooperAgent.register(
+        runtime, type=validation_result_topic_type, factory=lambda: LooperAgent()
+    )
 
     # Run the workflow
 
     runtime.start()
 
     await runtime.publish_message(
-        Message(initial_desription="A system to manage a space mission.", current_list=""),
+        Message(
+            initial_desription="A system to manage a space mission.", current_list=""
+        ),
         topic_id=TopicId(init_topic_type, source="default"),
     )
 
     await runtime.stop_when_idle()
     await model_client.close()
 
-import asyncio
-asyncio.run(main())
 
+import asyncio
+
+asyncio.run(main())

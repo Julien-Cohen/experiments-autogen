@@ -1,19 +1,29 @@
-from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
+from autogen_core import (
+    type_subscription,
+    RoutedAgent,
+    message_handler,
+    MessageContext,
+    TopicId,
+)
 from autogen_core.models import ChatCompletionClient, SystemMessage, UserMessage
 
 from message import *
 from LLM_BDI_routed_agent import *
 
+
 @type_subscription(topic_type=init_topic_type)
 class RequirementManagerAgent(LLMBDIRoutedAgent):
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
-        super().__init__(description="A Requirement Manager agent (with LLM).", role="You are a requirement manager.")
+        super().__init__(
+            description="A Requirement Manager agent (with LLM).",
+            role="You are a requirement manager.",
+        )
 
         self._system_message = SystemMessage(
             content=(
-                self.llm_role +
-                " Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
+                self.llm_role
+                + " Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
                 " Answer YES is the specification is well covered."
                 " Answer NO otherwise."
             )
@@ -21,7 +31,9 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         self._model_client = model_client
         self.llm_explicit_directive = "Do you think the specification if well covered ?"
 
-        self.desire.append("Build a list of atomic requirements that cover the given specification.")
+        self.desire.append(
+            "Build a list of atomic requirements that cover the given specification."
+        )
 
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
@@ -30,16 +42,23 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print(f"{'-' * 80}")
         print(str(self))
 
-        print("I received the initial specification and the list of atomic requirements")
+        print(
+            "I received the initial specification and the list of atomic requirements"
+        )
         print("I pass them to the LLM to tell if the specification is well covered.")
         print(f"The current list of atomic requirements is:" + message.current_list)
 
         the_list = message.current_list if message.current_list != "" else "EMPTY"
-        prompt = (f"This is the specification of the system: {message.initial_desription}"
-                  f"This is the list of atomic requirements: {the_list}"
-                  + self.llm_explicit_directive)
+        prompt = (
+            f"This is the specification of the system: {message.initial_desription}"
+            f"This is the list of atomic requirements: {the_list}"
+            + self.llm_explicit_directive
+        )
         llm_result = await self._model_client.create(
-            messages=[self._system_message, UserMessage(content=prompt, source=self.id.key)],
+            messages=[
+                self._system_message,
+                UserMessage(content=prompt, source=self.id.key),
+            ],
             cancellation_token=ctx.cancellation_token,
         )
         response = llm_result.content
@@ -52,11 +71,14 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print(f"{'-' * 80}")
 
         if response.startswith("YES"):
-            print ("(End)")
+            print("(End)")
         else:
-            print ("(Continue)")
+            print("(Continue)")
             print(f"{'-' * 80}\n")
-            await self.publish_message(Message(initial_desription= self.get_belief_by_tag(spec_tag),
-                                               current_list=self.get_belief_by_tag(req_list_tag)),
-                                       topic_id=TopicId(cut_request_topic_type, source=self.id.key))
-
+            await self.publish_message(
+                Message(
+                    initial_desription=self.get_belief_by_tag(spec_tag),
+                    current_list=self.get_belief_by_tag(req_list_tag),
+                ),
+                topic_id=TopicId(cut_request_topic_type, source=self.id.key),
+            )

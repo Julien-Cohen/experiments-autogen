@@ -1,4 +1,10 @@
-from autogen_core import type_subscription, RoutedAgent, message_handler, MessageContext, TopicId
+from autogen_core import (
+    type_subscription,
+    RoutedAgent,
+    message_handler,
+    MessageContext,
+    TopicId,
+)
 
 from message import *
 from BDI_routed_agent import *
@@ -12,7 +18,9 @@ class LooperAgent(BDIRoutedAgent):
 
         self.desire.append("Pass to the manager a list of requirement complete.")
         self.desire.append("Pass to the manager a list of requirement correct.")
-        self.desire.append("Pass to the manager a list of requirements without redundancy.")
+        self.desire.append(
+            "Pass to the manager a list of requirements without redundancy."
+        )
 
     @message_handler
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
@@ -22,22 +30,45 @@ class LooperAgent(BDIRoutedAgent):
 
         print(str(self))
 
-        print("My goal is to re-launch the process, with a convenient list of atomic requirements.")
-        print("I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation.")
-        print(f"You described the following specification:\n" + self.get_belief_by_tag(spec_tag) +"\n")
-        print(f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n")
+        print(
+            "My goal is to re-launch the process, with a convenient list of atomic requirements."
+        )
+        print(
+            "I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation."
+        )
+        print(
+            f"You described the following specification:\n"
+            + self.get_belief_by_tag(spec_tag)
+            + "\n"
+        )
+        print(
+            f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n"
+        )
         print(f"Validation: {message.validation}")
-        if bool(message.validation) :
-            self.set_intention("Add the received requirement to the list of considered requirements and notify the manager.")
+        if bool(message.validation):
+            self.set_intention(
+                "Add the received requirement to the list of considered requirements and notify the manager."
+            )
         else:
-            self.set_intention("Do not add the received requirement to the list of considered requirements and notify the manager.")
+            self.set_intention(
+                "Do not add the received requirement to the list of considered requirements and notify the manager."
+            )
 
         print(f"{'-' * 80}\n")
 
-        new_list = self.get_belief_by_tag(req_list_tag) + " \n * " + message.atomic_requirement_tentative if bool(message.validation) else self.get_belief_by_tag(req_list_tag)
+        new_list = (
+            self.get_belief_by_tag(req_list_tag)
+            + " \n * "
+            + message.atomic_requirement_tentative
+            if bool(message.validation)
+            else self.get_belief_by_tag(req_list_tag)
+        )
 
-        if message.validation :
-            await self.publish_message(Message(initial_desription=self.get_belief_by_tag(spec_tag),
-                                               current_list=new_list ),
-                                       topic_id=TopicId(init_topic_type, source=self.id.key))
-
+        if message.validation:
+            await self.publish_message(
+                Message(
+                    initial_desription=self.get_belief_by_tag(spec_tag),
+                    current_list=new_list,
+                ),
+                topic_id=TopicId(init_topic_type, source=self.id.key),
+            )
