@@ -40,10 +40,6 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         print(f"{'-' * 80}")
         print(str(self))
 
-        print(
-            "I received the initial specification and the list of atomic requirements and I passed them to the LLM."
-        )
-
         response = await self.bdi_select_intention(ctx)
 
         log_answer(response)

@@ -79,8 +79,8 @@ class LooperAgent(BDIRoutedAgent):
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
 
-    def bdi_select_intention(self, message):
+    def bdi_select_intention(self, ctx):
         pass  # fixme
 
-    def bdi_act(self, message):
+    def bdi_act(self, ctx):
         pass  # fixme
