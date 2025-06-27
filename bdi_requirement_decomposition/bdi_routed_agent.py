@@ -27,14 +27,14 @@ class BDIRoutedAgent(RoutedAgent, BDIData):
     # @message_handler
     async def handle_message(self, message, ctx):
         self.bdi_observe_message(message)
-        self.bdi_select_intention(message)
-        self.bdi_act(message)
+        self.bdi_select_intention(ctx)
+        self.bdi_act(ctx)
 
     @abstractmethod
     def bdi_observe_message(self, message): ...
 
     @abstractmethod
-    def bdi_select_intention(self, message): ...
+    def bdi_select_intention(self, ctx): ...
 
     @abstractmethod
-    def bdi_act(self, message): ...
+    def bdi_act(self, ctx): ...

@@ -33,14 +33,9 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
 
     @message_handler
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
-        bdi_observe_message(self, message)
+        self.bdi_observe_message(message)
 
         the_list = message.current_list if message.current_list != "" else "EMPTY"
-
-        self.set_intention(
-            "Consult an LLM to check if the set of requirements cover well the specification.",
-            the_list,
-        )
 
         print(f"{'-' * 80}")
         print(str(self))

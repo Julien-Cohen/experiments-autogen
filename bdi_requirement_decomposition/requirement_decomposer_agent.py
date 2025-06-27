@@ -35,8 +35,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
 
-        bdi_observe_message(self, message)
-        self.set_intention("Consult an LLM to generate new requirements.", "---")
+        self.bdi_observe_message(message)
 
         print(f"{'-' * 80}")
         print(str(self))
@@ -45,6 +44,17 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
             "I received the initial specification and the list of atomic requirements and I passed them to the LLM."
         )
 
+        response = await self.bdi_select_intention(ctx)
+
+        log_answer(response)
+        print(f"{'-' * 80}\n")
+
+        await self.bdi_act(ctx)
+
+    def bdi_observe_message(self, message):
+        message__bdi_observe_message(self, message)
+
+    async def bdi_select_intention(self, ctx):
         prompt = (
             f"Initial specification:"
             + self.get_belief_by_tag(spec_tag)
@@ -63,24 +73,15 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
         self.set_intention("Pass this proposal to the validation agent.", response)
+        return response
 
-        log_answer(response)
-        print(f"{'-' * 80}\n")
-
+    async def bdi_act(self, ctx):
+        (a, b) = self.intention
         await self.publish_message(
             Message(
                 initial_desription=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=response,
+                atomic_requirement_tentative=b,
             ),
             topic_id=TopicId(validation_request_topic_type, source=self.id.key),
         )
-
-    def bdi_observe_message(self, message):
-        message__bdi_observe_message(self, message)
-
-    def bdi_select_intention(self, message):
-        pass  # fixme
-
-    def bdi_act(self, message):
-        pass  # fixme

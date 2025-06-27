@@ -36,11 +36,9 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
     @message_handler
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
-        bdi_observe_message(self, message)
+        self.bdi_observe_message(message)
+
         candidate = message.atomic_requirement_tentative
-        self.set_intention(
-            "Consult an LLM to analyse the tentative requirement.", candidate
-        )
 
         the_list = (
             self.get_belief_by_tag(req_list_tag)

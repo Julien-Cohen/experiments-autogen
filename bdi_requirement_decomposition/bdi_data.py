@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class BDIData:
-    belief: list[(str, str)]
+    belief: list[tuple[str, str]]
     desire: list[str]
     intention: tuple[str, str]
 
