@@ -14,9 +14,9 @@ class LooperAgent(BDIRoutedAgent):
     def __init__(self) -> None:
         super().__init__("A Looper agent (Algorithmic).")
 
-        self.desire.append("Pass to the manager a list of requirement complete.")
-        self.desire.append("Pass to the manager a list of requirement correct.")
-        self.desire.append(
+        self.add_desire("Pass to the manager a list of requirement complete.")
+        self.add_desire("Pass to the manager a list of requirement correct.")
+        self.add_desire(
             "Pass to the manager a list of requirements without redundancy."
         )
         self.candidate = None
@@ -69,11 +69,10 @@ class LooperAgent(BDIRoutedAgent):
             )
 
     async def bdi_act(self, ctx):
-        (a, b) = self.intention
         await self.publish_message(
             Message(
-                initial_desription=self.get_belief_by_tag(spec_tag),
-                current_list=b,
+                initial_description=self.get_belief_by_tag(spec_tag),
+                current_list=self.get_intention_data(),
             ),
             topic_id=TopicId(init_topic_type, source=self.id.key),
         )

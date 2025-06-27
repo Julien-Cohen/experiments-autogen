@@ -1,6 +1,5 @@
 from autogen_core import (
     type_subscription,
-    message_handler,
     MessageContext,
     TopicId,
 )
@@ -27,7 +26,7 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
 
         self.llm_explicit_directive = "Do you think the specification if well covered ?"
 
-        self.desire.append(
+        self.add_desire(
             "Build a list of atomic requirements that cover the given specification."
         )
 
@@ -57,7 +56,7 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
 
         prompt = (
             f"This is the specification of the system: {self.get_belief_by_tag(spec_tag)}"
-            f"This is the list of atomic requirements: {l}"
+            f"This is the list of atomic requirements: {the_list}"
             + self.llm_explicit_directive
         )
         llm_result = await self._model_client.create(
@@ -83,11 +82,10 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
             print(f"{'-' * 80}\n")
 
     async def bdi_act(self, ctx):
-        (a, b) = self.intention
-        if a == "PASS":
+        if self.get_intention_action() == "PASS":
             await self.publish_message(
                 Message(
-                    initial_desription=self.get_belief_by_tag(spec_tag),
+                    initial_description=self.get_belief_by_tag(spec_tag),
                     current_list=self.get_belief_by_tag(req_list_tag),
                 ),
                 topic_id=TopicId(cut_request_topic_type, source=self.id.key),

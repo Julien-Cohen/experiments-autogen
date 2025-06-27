@@ -1,28 +1,56 @@
 from autogen_core import RoutedAgent, message_handler
 
-from bdi_requirement_decomposition.bdi_data import BDIData
-from bdi_requirement_decomposition.message import bdi_observe_message
+from bdi_requirement_decomposition.bdi_data import *
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 
 def log(m: str):
     print("[LOG] " + m)
 
 
-class BDIRoutedAgent(RoutedAgent, BDIData):
+class BDIRoutedAgent(RoutedAgent):
 
     def __init__(self, description):
         RoutedAgent.__init__(self, description)
-        BDIData.__init__(self)
+        self.beliefs = Beliefs()
+        self.desires = Desires()
+        self.intention = Intention()
 
     def __str__(self):
-        return "I am: " + self._description + "\n" + BDIData.__str__(self)
+        return (
+            "I am: "
+            + self._description
+            + "\n"
+            + str(self.beliefs)
+            + "\n"
+            + str(self.desires)
+            + "\n"
+            + str(self.intention)
+        )
 
     def set_intention(self, action: str, data: str):
-        BDIData.set_intention(self, action, data)
+        self.intention.set(action, data)
         log("Intention updated (" + self._description + ")")
-        log(self.format_intention())
+        log(str(self.intention))
+
+    def get_intention_action(self):
+        return self.intention.get_action()
+
+    def get_intention_data(self):
+        return self.intention.get_data()
+
+    def add_belief(self, data, tag):
+        self.beliefs.add_belief(data, tag)
+
+    def update_belief(self, data, tag):
+        self.beliefs.update_belief(data, tag)
+
+    def get_belief_by_tag(self, tag):
+        return self.beliefs.get_belief_by_tag(tag)
+
+    def add_desire(self, d):
+        self.desires.add(d)
 
     # @message_handler
     async def handle_message(self, message, ctx):

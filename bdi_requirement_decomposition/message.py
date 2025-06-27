@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 
+from bdi_requirement_decomposition.bdi_routed_agent import BDIRoutedAgent
+
+
 # Message Protocol
 
 
 @dataclass
 class Message:
-    initial_desription: str
+    initial_description: str
     current_list: str
     atomic_requirement_tentative: str = None
     validation: str = None
@@ -26,10 +29,10 @@ spec_tag = "SPEC"
 req_list_tag = "REQ_LIST"
 
 
-def bdi_observe_message(d: BDIData, m: Message):
-    d.update_belief(m.initial_desription, spec_tag)
+def bdi_observe_message(d: BDIRoutedAgent, m: Message):
+    d.update_belief(m.initial_description, spec_tag)
     d.update_belief(m.current_list, req_list_tag)
 
 
-def message__bdi_observe_message(d: BDIData, m: Message):
+def message__bdi_observe_message(d: BDIRoutedAgent, m: Message):
     bdi_observe_message(d, m)

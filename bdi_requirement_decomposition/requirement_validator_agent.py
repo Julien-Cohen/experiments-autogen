@@ -1,6 +1,5 @@
 from autogen_core import (
     type_subscription,
-    message_handler,
     MessageContext,
     TopicId,
 )
@@ -29,8 +28,8 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
         self.llm_explicit_directive = "Do you validate this?"
 
-        self.desire.append("Ensure that the new requirement is correct.")
-        self.desire.append(
+        self.add_desire("Ensure that the new requirement is correct.")
+        self.add_desire(
             "Ensure that the new requirement is not already taken into account."
         )
         self.candidate = None
@@ -85,13 +84,12 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         self.set_intention("VALID" if answer_bool else "INVALID", self.candidate)
 
     async def bdi_act(self, ctx):
-        (a, b) = self.intention
         await self.publish_message(
             Message(
-                initial_desription=self.get_belief_by_tag(spec_tag),
+                initial_description=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=b,
-                validation=a,
+                atomic_requirement_tentative=self.get_intention_data(),
+                validation=self.get_intention_action(),
             ),
             topic_id=TopicId(validation_result_topic_type, source=self.id.key),
         )

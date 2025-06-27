@@ -1,6 +1,5 @@
 from autogen_core import (
     type_subscription,
-    message_handler,
     MessageContext,
     TopicId,
 )
@@ -28,7 +27,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         self.llm_explicit_directive = (
             "Now please propose a new requirement (exactly one)."
         )
-        self.desire.append(
+        self.add_desire(
             "Find requirements related to the specifications, that help to complete the list of atomic requirements."
         )
 
@@ -72,12 +71,11 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         return response
 
     async def bdi_act(self, ctx):
-        (a, b) = self.intention
         await self.publish_message(
             Message(
-                initial_desription=self.get_belief_by_tag(spec_tag),
+                initial_description=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=b,
+                atomic_requirement_tentative=self.get_intention_data(),
             ),
             topic_id=TopicId(validation_request_topic_type, source=self.id.key),
         )
