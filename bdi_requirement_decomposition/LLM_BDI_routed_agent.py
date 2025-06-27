@@ -1,6 +1,13 @@
 from autogen_core.models import SystemMessage, ChatCompletionClient
 
-from bdi_requirement_decomposition.BDI_routed_agent import BDIRoutedAgent
+from bdi_requirement_decomposition.BDI_routed_agent import *
+
+
+def log_answer(answer):
+    log("[LLM ANSWER]")
+    log(f"{'=' * 80}")
+    log(answer)
+    log(f"{'=' * 80}\n")
 
 
 class LLMBDIRoutedAgent(BDIRoutedAgent):

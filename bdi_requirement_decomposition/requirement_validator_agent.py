@@ -70,9 +70,8 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
 
-        print("Here is its answer.")
-        print(f"{'-' * 80}")
-        print(response)
+        log_answer(response)
+
         print(f"{'-' * 80}\n")
 
         answer_bool = response.startswith("CORRECT")

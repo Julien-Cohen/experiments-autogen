@@ -3,6 +3,10 @@ from autogen_core import RoutedAgent
 from bdi_requirement_decomposition.BDI_data import BDIData
 
 
+def log(m: str):
+    print("[LOG] " + m)
+
+
 class BDIRoutedAgent(RoutedAgent, BDIData):
 
     def __init__(self, description):
@@ -14,8 +18,5 @@ class BDIRoutedAgent(RoutedAgent, BDIData):
 
     def set_intention(self, action: str, data: str):
         BDIData.set_intention(self, action, data)
-        self.log("Intention updated (" + self._description + ")")
-        self.log(self.format_intention())
-
-    def log(self, m: str):
-        print("[LOG] " + m)
+        log("Intention updated (" + self._description + ")")
+        log(self.format_intention())

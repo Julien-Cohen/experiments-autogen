@@ -64,9 +64,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         assert isinstance(response, str)
         self.set_intention("Pass this proposal to the validation agent.", response)
 
-        print("Here is its answer.")
-        print(f"{'-' * 80}")
-        print(response)
+        log_answer(response)
         print(f"{'-' * 80}\n")
 
         await self.publish_message(

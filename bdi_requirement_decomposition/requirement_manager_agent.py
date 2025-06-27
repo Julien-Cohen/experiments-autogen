@@ -20,8 +20,8 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
             llm_role="You are a requirement manager.",
             llm_job_description=(
                 "Given a specification of a system, and a list of atomic requirements, tell if that list of atomic requirements covers well that specification."
-                + " Answer YES is the specification is well covered."
-                + " Answer NO otherwise."
+                + " Answer COMPLETE is the specification is well covered."
+                + " Answer PARTIAL otherwise."
             ),
         )
 
@@ -66,13 +66,11 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         response = llm_result.content
         assert isinstance(response, str)
 
-        print("Here is its answer. (NO means not covered yet, YES means well covered)")
+        log_answer(response)
 
         print(f"{'-' * 80}")
-        print(response)
-        print(f"{'-' * 80}")
 
-        if response.startswith("YES"):
+        if response.startswith("COMPLETE"):
             self.set_intention("Stop (success).", message.current_list)
             print("(End)")
         else:

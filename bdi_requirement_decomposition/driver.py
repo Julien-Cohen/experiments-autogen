@@ -40,7 +40,7 @@ async def main():
     )
 
     # update model_client below to change the LLM model
-    model_client = model_client_1
+    model_client = model_client_2
 
     runtime = SingleThreadedAgentRuntime()
 
