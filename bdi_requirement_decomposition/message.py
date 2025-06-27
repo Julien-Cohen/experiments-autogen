@@ -26,5 +26,3 @@ req_list_tag = "REQ_LIST"
 def bdi_observe_message(d: BDIData, m:Message):
     d.update_belief(m.initial_desription, spec_tag)
     d.update_belief(m.current_list, req_list_tag)
-    if m.atomic_requirement_tentative is not None :
-        d.set_intention(m.atomic_requirement_tentative)

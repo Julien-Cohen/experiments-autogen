@@ -11,3 +11,11 @@ class BDIRoutedAgent(RoutedAgent, BDIData):
 
     def __str__(self):
         return "I am: " + self._description + "\n" + BDIData.__str__(self)
+
+    def set_intention(self, i:str):
+        BDIData.set_intention(self, i)
+        self.log("Intension updated.")
+        self.log(self.format_intention())
+
+    def log(self, m:str):
+        print ("[LOG] " + m)

@@ -30,7 +30,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
 
         bdi_observe_message(self, message)
-        self.intention = ""
+        self.reset_intention()
 
 
         print(f"{'-' * 80}")
@@ -48,7 +48,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         )
         response = llm_result.content
         assert isinstance(response, str)
-        self.intention = response
+        self.set_intention(response)
 
         print("Here is its answer.")
         print(f"{'-' * 80}")

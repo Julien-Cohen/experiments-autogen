@@ -28,9 +28,10 @@ class LooperAgent(BDIRoutedAgent):
         print(f"We consider the following atomic requirement:\n {message.atomic_requirement_tentative}\n")
         print(f"Validation: {message.validation}")
         if bool(message.validation) :
-            print(f"(validated)")
+            self.set_intention("Add the received requirement to the list of considered requirements and notify the manager.")
         else:
-            print(f"(invalidated)")
+            self.set_intention("Do not add the received requirement to the list of considered requirements and notify the manager.")
+
         print(f"{'-' * 80}\n")
 
         new_list = self.get_belief_by_tag(req_list_tag) + " \n * " + message.atomic_requirement_tentative if bool(message.validation) else self.get_belief_by_tag(req_list_tag)
