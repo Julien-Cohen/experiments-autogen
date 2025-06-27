@@ -26,6 +26,7 @@ async def main():
         model="gpt-4o-mini",
         # api_key="YOUR_API_KEY"
     )
+    # https://platform.openai.com/settings/organization/limits
 
     model_client_2 = OpenAIChatCompletionClient(
         model="gemini-2.0-flash-lite",
@@ -38,6 +39,7 @@ async def main():
         ),
         # api_key="GEMINI_API_KEY",
     )
+    # https://ai.google.dev/gemini-api/docs/rate-limits?hl=fr
 
     # update model_client below to change the LLM model
     model_client = model_client_2
