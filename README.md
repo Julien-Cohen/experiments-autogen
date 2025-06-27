@@ -13,6 +13,7 @@ API key needed :
 * Add a variable OPENAI_API_KEY in the environement. In bash or zsh (.bashrc or .zshrc) export OPENAI_API_KEY=...
 * Optional : add a GEMINI_API_KEY.
 * Alternatively : store your keys in a .env file with OPENAI_API_KEY=... (use your key but don't share it)
+  * pip install python-dotenv
 
 ## Configuration
 

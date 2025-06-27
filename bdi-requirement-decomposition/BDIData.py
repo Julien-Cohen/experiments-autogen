@@ -37,10 +37,11 @@ class BDIData:
     def set_intention(self, i:str):
         self.intention = i
 
-    def report_bdi(self):
+
+    def __str__(self):
         return (
-                "BELIEF= " + str(self.belief) +"\n"
-                "DESIRE= " + str (self.desire) + "\n" 
+                "BELIEF= " + str(self.belief) + "\n"
+                "DESIRE= " + str(self.desire) + "\n"
                 "INTENTION= " + str(self.intention) + "\n")
 
     def reset_intention(self):

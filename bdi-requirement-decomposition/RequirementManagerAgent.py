@@ -30,7 +30,7 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
-        print(self.report_bdi())
+        print(str(self))
 
         print("I received the initial specification and the list of atomic requirements")
         print("I pass them to the LLM to tell if the specification is well covered.")
@@ -61,3 +61,6 @@ class RequirementManagerAgent(LLMRoutedAgent, BDIData):
             await self.publish_message(Message(initial_desription= self.get_belief_by_tag(spec_tag),
                                                current_list=self.get_belief_by_tag(req_list_tag)),
                                        topic_id=TopicId(cut_request_topic_type, source=self.id.key))
+
+    def __str__(self):
+        return BDIData.__str__(self)

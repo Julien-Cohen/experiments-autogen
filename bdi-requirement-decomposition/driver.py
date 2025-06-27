@@ -9,7 +9,7 @@ from autogen_core.models import ModelInfo
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 from RequirementManagerAgent import RequirementManagerAgent
-from DecomposerAgent import DecomposerAgent
+from RequirementDecomposerAgent import RequirementDecomposerAgent
 from LooperAgent import LooperAgent
 from RequirementValidatorAgent import *
 
@@ -33,15 +33,15 @@ async def main():
     )
 
     # update model_client below to change the LLM model
-    model_client = model_client_1
+    model_client = model_client_2
 
     runtime = SingleThreadedAgentRuntime()
 
     await RequirementManagerAgent.register(
         runtime, type=init_topic_type, factory=lambda: RequirementManagerAgent(model_client=model_client)
     )
-    await DecomposerAgent.register(
-        runtime, type=cut_request_topic_type, factory=lambda: DecomposerAgent(model_client=model_client)
+    await RequirementDecomposerAgent.register(
+        runtime, type=cut_request_topic_type, factory=lambda: RequirementDecomposerAgent(model_client=model_client)
     )
     await RequirementValidatorAgent.register(
         runtime, type=validation_request_topic_type, factory=lambda: RequirementValidatorAgent(model_client=model_client)

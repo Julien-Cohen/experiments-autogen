@@ -36,7 +36,7 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
-        print(self.report_bdi())
+        print(str(self))
         print("I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM.")
 
         prompt = (f"Initial specification:"+ self.get_belief_by_tag(spec_tag) +" ;"
@@ -63,3 +63,6 @@ class RequirementValidatorAgent(LLMRoutedAgent, BDIData):
                                            atomic_requirement_tentative=self.intention,
                                            validation=str(answer_bool)),
                                    topic_id=TopicId(validation_result_topic_type, source=self.id.key))
+
+    def __str__(self):
+        return BDIData.__str__(self)

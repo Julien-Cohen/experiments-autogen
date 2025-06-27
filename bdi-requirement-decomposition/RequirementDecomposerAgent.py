@@ -7,7 +7,7 @@ from LLMRoutedAgent import *
 from BDIData import *
 
 @type_subscription(topic_type=cut_request_topic_type)
-class DecomposerAgent(LLMRoutedAgent, BDIData):
+class RequirementDecomposerAgent(LLMRoutedAgent, BDIData):
 
 
     def __init__(self, model_client: ChatCompletionClient) -> None:
@@ -36,7 +36,7 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
 
         print(f"{'-' * 80}")
         print("I am: " + self._description)
-        print(self.report_bdi())
+        print(str(self))
 
         print("I received the initial specification and the list of atomic requirements and I passed them to the LLM.")
 
@@ -62,3 +62,6 @@ class DecomposerAgent(LLMRoutedAgent, BDIData):
                                            current_list=self.get_belief_by_tag(req_list_tag),
                                            atomic_requirement_tentative=self.intention),
                                    topic_id=TopicId(validation_request_topic_type, source=self.id.key))
+
+    def __str__(self) :
+        return BDIData.__str__(self)

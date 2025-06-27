@@ -22,7 +22,7 @@ class LooperAgent(RoutedAgent, BDIData):
         print(f"{'-' * 80}")
         print("I am: " + self._description)
 
-        print(self.report_bdi())
+        print(str(self))
 
         print("My goal is to re-launch the process, with a convenient list of atomic requirements.")
         print("I received a message with the initial specification, a list of atomic requirement, a tentative requirement, and the result of the validation.")
@@ -43,3 +43,5 @@ class LooperAgent(RoutedAgent, BDIData):
                                        topic_id=TopicId(init_topic_type, source=self.id.key))
 
 
+    def __str__(self) :
+        return BDIData.__str__(self)
