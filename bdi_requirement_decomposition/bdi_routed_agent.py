@@ -1,6 +1,6 @@
 from autogen_core import RoutedAgent, message_handler
 
-from bdi_requirement_decomposition.BDI_data import BDIData
+from bdi_requirement_decomposition.bdi_data import BDIData
 from bdi_requirement_decomposition.message import bdi_observe_message
 
 from abc import ABC, abstractmethod
@@ -24,7 +24,7 @@ class BDIRoutedAgent(RoutedAgent, BDIData):
         log("Intention updated (" + self._description + ")")
         log(self.format_intention())
 
-    @message_handler
+    # @message_handler
     async def handle_message(self, message, ctx):
         self.bdi_observe_message(message)
         self.bdi_select_intention(message)

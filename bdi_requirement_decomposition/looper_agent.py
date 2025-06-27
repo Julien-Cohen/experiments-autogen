@@ -7,7 +7,7 @@ from autogen_core import (
 )
 
 from message import *
-from BDI_routed_agent import *
+from bdi_routed_agent import *
 
 
 @type_subscription(topic_type=validation_result_topic_type)
@@ -75,3 +75,12 @@ class LooperAgent(BDIRoutedAgent):
             topic_id=TopicId(init_topic_type, source=self.id.key),
         )
         # self.clear_intention()
+
+    def bdi_observe_message(self, message):
+        message__bdi_observe_message(self, message)
+
+    def bdi_select_intention(self, message):
+        pass  # fixme
+
+    def bdi_act(self, message):
+        pass  # fixme

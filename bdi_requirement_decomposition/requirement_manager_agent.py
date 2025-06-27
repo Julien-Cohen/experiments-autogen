@@ -7,7 +7,7 @@ from autogen_core import (
 from autogen_core.models import UserMessage
 
 from message import *
-from LLM_BDI_routed_agent import *
+from llm_bdi_routed_agent import *
 
 
 @type_subscription(topic_type=init_topic_type)
@@ -86,3 +86,12 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
                 ),
                 topic_id=TopicId(cut_request_topic_type, source=self.id.key),
             )
+
+    def bdi_observe_message(self, message):
+        message__bdi_observe_message(self, message)
+
+    def bdi_select_intention(self, message):
+        pass  # fixme
+
+    def bdi_act(self, message):
+        pass  # fixme

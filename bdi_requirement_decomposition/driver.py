@@ -6,6 +6,8 @@ from autogen_core import (
     TopicId,
 )
 from autogen_core.models import ModelInfo
+from autogen_ext.cache_store.diskcache import DiskCacheStore
+from autogen_ext.models.cache import ChatCompletionCache, CHAT_CACHE_VALUE_TYPE
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 from requirement_manager_agent import RequirementManagerAgent
@@ -41,8 +43,13 @@ async def main():
     )
     # https://ai.google.dev/gemini-api/docs/rate-limits?hl=fr
 
+    from diskcache import Cache
+
+    cache_store = DiskCacheStore[CHAT_CACHE_VALUE_TYPE](Cache("/tmp"))
+    cache_client = ChatCompletionCache(model_client_2, cache_store)
+
     # update model_client below to change the LLM model
-    model_client = model_client_2
+    model_client = cache_client
 
     runtime = SingleThreadedAgentRuntime()
 
