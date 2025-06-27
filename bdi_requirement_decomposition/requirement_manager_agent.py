@@ -39,6 +39,13 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
     async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
         bdi_observe_message(self, message)
 
+        the_list = message.current_list if message.current_list != "" else "EMPTY"
+
+        self.set_intention(
+            "Consult an LLM to check if the set of requirements cover well the specification.",
+            the_list,
+        )
+
         print(f"{'-' * 80}")
         print(str(self))
 
@@ -47,13 +54,6 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         )
         print("I pass them to the LLM to tell if the specification is well covered.")
         print(f"The current list of atomic requirements is:" + message.current_list)
-
-        the_list = message.current_list if message.current_list != "" else "EMPTY"
-
-        self.set_intention(
-            "Consult an LLM to check if the set of requirements cover well the specification.",
-            the_list,
-        )
 
         prompt = (
             f"This is the specification of the system: {message.initial_desription}"

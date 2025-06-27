@@ -26,6 +26,10 @@ class LooperAgent(BDIRoutedAgent):
     async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
         bdi_observe_message(self, message)
         candidate = message.atomic_requirement_tentative
+        self.set_intention(
+            "Consider the result of the analysis I receive, build a new list accordingly, and transmit it to the manager.",
+            message.validation,
+        )
 
         print(f"{'-' * 80}")
 
@@ -63,11 +67,11 @@ class LooperAgent(BDIRoutedAgent):
             else self.get_belief_by_tag(req_list_tag)
         )
 
-        if message.validation:
-            await self.publish_message(
-                Message(
-                    initial_desription=self.get_belief_by_tag(spec_tag),
-                    current_list=new_list,
-                ),
-                topic_id=TopicId(init_topic_type, source=self.id.key),
-            )
+        await self.publish_message(
+            Message(
+                initial_desription=self.get_belief_by_tag(spec_tag),
+                current_list=new_list,
+            ),
+            topic_id=TopicId(init_topic_type, source=self.id.key),
+        )
+        # self.clear_intention()

@@ -14,7 +14,7 @@ class BDIRoutedAgent(RoutedAgent, BDIData):
 
     def set_intention(self, action: str, data: str):
         BDIData.set_intention(self, action, data)
-        self.log("Intension updated.")
+        self.log("Intention updated (" + self._description + ")")
         self.log(self.format_intention())
 
     def log(self, m: str):

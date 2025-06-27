@@ -12,7 +12,7 @@ class BDIData:
     def __init__(self):
         self.belief = list()
         self.desire = list()
-        self.reset_intention()
+        self.clear_intention()
 
     def add_belief(self, data: str, tag: str):
         self.belief.insert(0, (data, tag))  # insert at head
@@ -36,7 +36,7 @@ class BDIData:
     def set_intention(self, action: str, data: str):
         self.intention = (action, data)
 
-    def reset_intention(self):
+    def clear_intention(self):
         self.intention = None
 
     def __str__(self):

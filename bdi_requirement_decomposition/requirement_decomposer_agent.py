@@ -38,6 +38,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
     async def handle_options(self, message: Message, ctx: MessageContext) -> None:
 
         bdi_observe_message(self, message)
+        self.set_intention("Consult an LLM to generate new requirements.", "---")
 
         print(f"{'-' * 80}")
         print(str(self))
@@ -45,8 +46,6 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         print(
             "I received the initial specification and the list of atomic requirements and I passed them to the LLM."
         )
-
-        self.set_intention("Consult an LLM to generate new requirements.", "---")
 
         prompt = (
             f"Initial specification:"
