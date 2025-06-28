@@ -32,10 +32,7 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
 
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
-        self.bdi_observe_message(message)
-        log(str(self))
-        await self.bdi_select_intention(ctx)
-        await self.bdi_act(ctx)
+        await super().handle_message(message, ctx)
 
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)

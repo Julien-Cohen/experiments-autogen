@@ -54,17 +54,17 @@ class BDIRoutedAgent(RoutedAgent):
     def add_desire(self, d):
         self.desires.add(d)
 
-    # @message_handler
     async def handle_message(self, message, ctx):
         self.bdi_observe_message(message)
-        self.bdi_select_intention(ctx)
-        self.bdi_act(ctx)
+        log(str(self))
+        await self.bdi_select_intention(ctx)
+        await self.bdi_act(ctx)
 
     @abstractmethod
     def bdi_observe_message(self, message): ...
 
     @abstractmethod
-    def bdi_select_intention(self, ctx): ...
+    async def bdi_select_intention(self, ctx): ...
 
     @abstractmethod
-    def bdi_act(self, ctx): ...
+    async def bdi_act(self, ctx): ...
