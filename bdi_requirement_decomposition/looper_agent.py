@@ -25,22 +25,8 @@ class LooperAgent(BDIRoutedAgent):
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
-
-        print(str(self))
-
-        print(
-            f"You described the following specification:\n"
-            + self.get_belief_by_tag(spec_tag)
-            + "\n"
-        )
-
-        print(f"We consider the following atomic requirement:\n {self.candidate}\n")
-        print(f"Validation: {self.validation}")
-
+        log(str(self))
         self.bdi_select_intention(ctx)
-
-        print(f"{'-' * 80}\n")
-
         await self.bdi_act(ctx)
 
     def bdi_observe_message(self, message):
@@ -49,6 +35,9 @@ class LooperAgent(BDIRoutedAgent):
         self.validation = bool(message.validation)
 
     def bdi_select_intention(self, ctx):
+
+        print(f"We consider the following atomic requirement:\n {self.candidate}\n")
+        print(f"Validation: {self.validation}")
 
         new_list = (
             self.get_belief_by_tag(req_list_tag) + " \n * " + self.candidate

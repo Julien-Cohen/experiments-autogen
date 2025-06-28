@@ -33,16 +33,9 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
 
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
-
         self.bdi_observe_message(message)
-
-        print(str(self))
-
-        response = await self.bdi_select_intention(ctx)
-
-        log_answer(response)
-        print(f"{'-' * 80}\n")
-
+        log(str(self))
+        await self.bdi_select_intention(ctx)
         await self.bdi_act(ctx)
 
     def bdi_observe_message(self, message):
@@ -65,9 +58,9 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
             cancellation_token=ctx.cancellation_token,
         )
         response = llm_result.content
+        log_answer(response)
         assert isinstance(response, str)
         self.set_intention("Pass this proposal to the validation agent.", response)
-        return response
 
     async def bdi_act(self, ctx):
         await self.publish_message(

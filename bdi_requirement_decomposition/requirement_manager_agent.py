@@ -33,24 +33,23 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
-
-        print(f"{'-' * 80}")
-        print(str(self))
-
-        print(
-            "I received the initial specification and the list of atomic requirements"
-        )
-        print("I pass them to the LLM to tell if the specification is well covered.")
-        print(f"The current list of atomic requirements is:" + message.current_list)
-
+        log(str(self))
         await self.bdi_select_intention(ctx)
-
         await self.bdi_act(ctx)
 
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
 
     async def bdi_select_intention(self, ctx):
+        print(
+            "I received the initial specification and the list of atomic requirements"
+        )
+        print("I pass them to the LLM to tell if the specification is well covered.")
+        print(
+            f"The current list of atomic requirements is:"
+            + self.get_belief_by_tag(req_list_tag)
+        )
+
         l = self.get_belief_by_tag(req_list_tag)
         the_list = l if l != "" else "EMPTY"
 

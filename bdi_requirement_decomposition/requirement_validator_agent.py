@@ -37,9 +37,8 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
-
+        log(str(self))
         await self.bdi_select_intention(ctx)
-
         await self.bdi_act(ctx)
 
     def bdi_observe_message(self, message):
@@ -47,13 +46,9 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         self.candidate = message.atomic_requirement_tentative
 
     async def bdi_select_intention(self, ctx):
-        the_list = (
-            self.get_belief_by_tag(req_list_tag)
-            if self.get_belief_by_tag(req_list_tag) != ""
-            else "EMPTY"
-        )  # fixme: avoid duplicate call
+        l = self.get_belief_by_tag(req_list_tag)
+        the_list = l if l != "" else "EMPTY"
 
-        print(str(self))
         print(
             "I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM."
         )
