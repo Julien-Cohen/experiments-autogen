@@ -26,11 +26,13 @@ class LooperAgent(BDIRoutedAgent):
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         await super().handle_message(message, ctx)
 
+    # override
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
         self.candidate = message.atomic_requirement_tentative
         self.validation = bool(message.validation)
 
+    # override
     async def bdi_select_intention(self, ctx):
 
         print(f"We consider the following atomic requirement:\n {self.candidate}\n")
@@ -53,6 +55,7 @@ class LooperAgent(BDIRoutedAgent):
                 new_list,
             )
 
+    # override
     async def bdi_act(self, ctx):
         await self.publish_message(
             Message(

@@ -55,6 +55,7 @@ class BDIRoutedAgent(RoutedAgent):
         self.desires.add(d)
 
     async def handle_message(self, message, ctx):
+        """Main BDI agent loop"""
         self.bdi_observe_message(message)
         log(str(self))
         await self.bdi_select_intention(ctx)

@@ -38,10 +38,12 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         await super().handle_message(message, ctx)
 
+    # override
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
         self.candidate = message.atomic_requirement_tentative
 
+    # override
     async def bdi_select_intention(self, ctx):
         l = self.get_belief_by_tag(req_list_tag)
         the_list = l if l != "" else "EMPTY"
@@ -74,6 +76,7 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
         self.set_intention("VALID" if answer_bool else "INVALID", self.candidate)
 
+    # override
     async def bdi_act(self, ctx):
         await self.publish_message(
             Message(

@@ -34,9 +34,11 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         await super().handle_message(message, ctx)
 
+    # override
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
 
+    # override
     async def bdi_select_intention(self, ctx):
         print(
             "I received the initial specification and the list of atomic requirements"
@@ -77,6 +79,7 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
             print("(Continue)")
             print(f"{'-' * 80}\n")
 
+    # override
     async def bdi_act(self, ctx):
         if self.get_intention_action() == "PASS":
             await self.publish_message(

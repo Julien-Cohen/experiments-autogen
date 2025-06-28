@@ -35,9 +35,11 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         await super().handle_message(message, ctx)
 
+    # override
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
 
+    # override
     async def bdi_select_intention(self, ctx):
         prompt = (
             f"Initial specification:"
@@ -59,6 +61,7 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         assert isinstance(response, str)
         self.set_intention("Pass this proposal to the validation agent.", response)
 
+    # override
     async def bdi_act(self, ctx):
         await self.publish_message(
             Message(
