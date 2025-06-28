@@ -31,7 +31,7 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         )
 
     @message_handler
-    async def handle_user_desire(self, message: Message, ctx: MessageContext) -> None:
+    async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
 
         print(f"{'-' * 80}")

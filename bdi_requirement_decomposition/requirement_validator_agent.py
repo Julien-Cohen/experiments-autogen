@@ -35,7 +35,7 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
         self.candidate = None
 
     @message_handler
-    async def handle_options(self, message: Message, ctx: MessageContext) -> None:
+    async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
 
         await self.bdi_select_intention(ctx)
@@ -53,7 +53,6 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
             else "EMPTY"
         )  # fixme: avoid duplicate call
 
-        print(f"{'-' * 80}")
         print(str(self))
         print(
             "I received the initial specification, the list of atomic requirements, the proposed addition, and I passed them to the LLM."

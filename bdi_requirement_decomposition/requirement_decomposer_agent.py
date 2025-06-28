@@ -32,11 +32,10 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         )
 
     @message_handler
-    async def handle_options(self, message: Message, ctx: MessageContext) -> None:
+    async def handle_message(self, message: Message, ctx: MessageContext) -> None:
 
         self.bdi_observe_message(message)
 
-        print(f"{'-' * 80}")
         print(str(self))
 
         response = await self.bdi_select_intention(ctx)

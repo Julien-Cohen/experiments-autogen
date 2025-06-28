@@ -23,10 +23,9 @@ class LooperAgent(BDIRoutedAgent):
         self.validation = None
 
     @message_handler
-    async def handle_final_copy(self, message: Message, ctx: MessageContext) -> None:
+    async def handle_message(self, message: Message, ctx: MessageContext) -> None:
         self.bdi_observe_message(message)
 
-        print(f"{'-' * 80}")
         print(str(self))
 
         print(

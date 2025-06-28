@@ -19,7 +19,8 @@ class BDIRoutedAgent(RoutedAgent):
 
     def __str__(self):
         return (
-            "I am: "
+            f"{'-' * 80}"
+            + "I am: "
             + self._description
             + "\n"
             + str(self.beliefs)
@@ -27,6 +28,7 @@ class BDIRoutedAgent(RoutedAgent):
             + str(self.desires)
             + "\n"
             + str(self.intention)
+            + f"{'-' * 80}"
         )
 
     def set_intention(self, action: str, data: str):
