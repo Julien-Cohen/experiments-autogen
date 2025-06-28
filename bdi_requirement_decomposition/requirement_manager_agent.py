@@ -91,4 +91,4 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
                 topic_id=TopicId(cut_request_topic_type, source=self.id.key),
             )
         else:
-            print(b)
+            print(self.get_intention_data())
