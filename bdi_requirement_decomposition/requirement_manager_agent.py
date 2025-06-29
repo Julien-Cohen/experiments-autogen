@@ -72,16 +72,17 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
         print(f"{'-' * 80}")
 
         if response.startswith("COMPLETE"):
-            self.set_intention("STOP", l)
+            self.add_intention("STOP", l)
             print("(End)")
         else:
-            self.set_intention("PASS", l)
+            self.add_intention("PASS", l)
             print("(Continue)")
             print(f"{'-' * 80}\n")
 
     # override
     async def bdi_act(self, ctx):
-        if self.get_intention_action() == "PASS":
+        if self.has_intention("PASS"):
+            self.remove_first_intention("PASS")
             await self.publish_message(
                 Message(
                     initial_description=self.get_belief_by_tag(spec_tag),
@@ -90,4 +91,5 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
                 topic_id=TopicId(cut_request_topic_type, source=self.id.key),
             )
         else:
-            print(self.get_intention_data())
+            self.remove_first_intention("STOP")
+            print(self.get_intention_data("STOP"))

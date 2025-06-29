@@ -59,15 +59,19 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
         response = llm_result.content
         log_answer(response)
         assert isinstance(response, str)
-        self.set_intention("Pass this proposal to the validation agent.", response)
+        self.add_intention("VALIDATION_REQUEST", response)
 
     # override
     async def bdi_act(self, ctx):
+        assert self.has_intention("VALIDATION_REQUEST")
+        action = "VALIDATION_REQUEST"
+        data = self.get_intention_data("VALIDATION_REQUEST")
+        self.remove_intention(action, data)
         await self.publish_message(
             Message(
                 initial_description=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=self.get_intention_data(),
+                atomic_requirement_tentative=data,
             ),
             topic_id=TopicId(validation_request_topic_type, source=self.id.key),
         )

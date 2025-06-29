@@ -74,16 +74,20 @@ class RequirementValidatorAgent(LLMBDIRoutedAgent):
 
         answer_bool = response.startswith("CORRECT")
 
-        self.set_intention("VALID" if answer_bool else "INVALID", self.candidate)
+        self.add_intention("PUBLISH", "VALID" if answer_bool else "INVALID")
 
     # override
     async def bdi_act(self, ctx):
+        assert self.has_intention("PUBLISH")
+        action = "PUBLISH"
+        data = self.get_intention_data(action)
+        self.remove_intention(action, data)
         await self.publish_message(
             Message(
                 initial_description=self.get_belief_by_tag(spec_tag),
                 current_list=self.get_belief_by_tag(req_list_tag),
-                atomic_requirement_tentative=self.get_intention_data(),
-                validation=self.get_intention_action(),
+                atomic_requirement_tentative=self.candidate,
+                validation=data,
             ),
             topic_id=TopicId(validation_result_topic_type, source=self.id.key),
         )

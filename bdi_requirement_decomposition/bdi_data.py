@@ -34,32 +34,39 @@ class Beliefs:
 
 
 @dataclass
-class Intention:
-    intention: tuple[str, str]
+class Intentions:
+    _store: list[tuple[str, str]]
 
     def __init__(self):
-        self.clear()
+        self._store = list()
 
-    def set(self, action: str, data: str):
-        self.intention = (action, data)
+    def add(self, action: str, data: str):
+        self._store.append((action, data))
 
-    def get_action(self):
-        (a, b) = self.intention
-        return a
+    def has_intention(self, tag):
+        # exists
+        for a, b in self._store:
+            if a is tag:
+                return True
+        return False
 
-    def get_data(self):
-        (a, b) = self.intention
-        return b
+    def get_intention_data(self, tag):
+        for a, b in self._store:
+            if a is tag:
+                return b
+        return None
 
-    def clear(self):
-        self.intention = None
+    def remove_intention(self, a, d):
+        self._store.remove((a, d))
+
+    def remove_first_intention(self, a):
+        self.remove_intention(a, self.get_intention_data(a))
 
     def __str__(self):
-        if self.intention is not None:
-            (a, b) = self.intention
-            return "INTENTION= " + a + " :: " + b
+        if self._store is not None:
+            return "INTENTIONS= " + str(self._store)
         else:
-            return "INTENTION= _"
+            return "INTENTIONS= _"
 
 
 @dataclass

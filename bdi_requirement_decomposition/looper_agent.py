@@ -45,22 +45,25 @@ class LooperAgent(BDIRoutedAgent):
         )
 
         if self.validation:
-            self.set_intention(
-                "Pass the list with the new requirement.",
+            self.add_intention(
+                "ADD",
                 new_list,
             )
         else:
-            self.set_intention(
-                "Pass the list without the new requirement.",
+            self.add_intention(
+                "PASS",
                 new_list,
             )
 
     # override
     async def bdi_act(self, ctx):
+        action = "ADD" if self.has_intention("ADD") else "PASS"
+        data = self.get_intention_data(action)
+        self.remove_intention(action, data)
         await self.publish_message(
             Message(
                 initial_description=self.get_belief_by_tag(spec_tag),
-                current_list=self.get_intention_data(),
+                current_list=data,
             ),
             topic_id=TopicId(init_topic_type, source=self.id.key),
         )
