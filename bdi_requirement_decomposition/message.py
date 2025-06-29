@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from bdi_requirement_decomposition.bdi_routed_agent import BDIRoutedAgent
+from bdi_routed_agent import BDIRoutedAgent
 
 
 # Message Protocol
