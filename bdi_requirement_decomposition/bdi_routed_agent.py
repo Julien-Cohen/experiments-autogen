@@ -15,7 +15,7 @@ class BDIRoutedAgent(RoutedAgent):
         RoutedAgent.__init__(self, description)
         self.beliefs = Beliefs()
         self.desires = Desires()
-        self.intention = Intentions()
+        self.intentions = Intentions()
 
     def __str__(self):
         return (
@@ -27,26 +27,26 @@ class BDIRoutedAgent(RoutedAgent):
             + "\n"
             + str(self.desires)
             + "\n"
-            + str(self.intention)
+            + str(self.intentions)
             + f"{'-' * 80}"
         )
 
     def add_intention(self, action: str, data: str):
-        self.intention.add(action, data)
+        self.intentions.add(action, data)
         log("Intention updated (" + self._description + ")")
-        log(str(self.intention))
+        log(str(self.intentions))
 
     def remove_intention(self, action, data):
-        self.intention.remove_intention(action, data)
+        self.intentions.remove_intention(action, data)
 
     def remove_first_intention(self, action):
-        self.intention.remove_first_intention(action)
+        self.intentions.remove_first_intention(action)
 
     def has_intention(self, tag):
-        return self.intention.has_intention(tag)
+        return self.intentions.has_intention(tag)
 
     def get_intention_data(self, tag):
-        return self.intention.get_intention_data(tag)
+        return self.intentions.get_intention_data(tag)
 
     def add_belief(self, data, tag):
         self.beliefs.add_belief(data, tag)
