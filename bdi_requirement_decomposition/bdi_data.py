@@ -27,7 +27,7 @@ class Beliefs:
         for a, b in self._store:
             if tag == b:
                 return a
-        raise InvalidStateError
+        return None
 
     def __str__(self):
         return "BELIEF= " + str(self._store)

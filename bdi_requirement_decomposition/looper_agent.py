@@ -11,6 +11,10 @@ from bdi_routed_agent import *
 @type_subscription(topic_type=validation_result_topic_type)
 class LooperAgent(BDIRoutedAgent):
 
+    validation_correctness = "CORRECTNESS"
+    validation_non_redundancy = "NON-REDUNDANCY"
+    validation_satisfiability = "SATISFIABILITY"
+
     def __init__(self) -> None:
         super().__init__("A Looper agent (Algorithmic).")
 
@@ -20,9 +24,6 @@ class LooperAgent(BDIRoutedAgent):
             "Pass to the manager a list of requirements without redundancy."
         )
         self.candidate = None
-        self.validation_correctness = None  # fixme : Beliefs ?
-        self.validation_non_redundancy = None
-        self.validation_satisfiability = None
 
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
@@ -33,47 +34,53 @@ class LooperAgent(BDIRoutedAgent):
         message__bdi_observe_message(self, message)
         self.candidate = message.atomic_requirement_tentative
         if message.validation is correctness_validated:
-            self.validation_correctness = True
+            self.update_belief(tag=self.validation_correctness, data=True)
         elif message.validation is correctness_invalidated:
-            self.validation_correctness = False
+            self.update_belief(tag=self.validation_correctness, data=False)
         elif message.validation is non_redundancy_validated:
-            self.validation_non_redundancy = True
+            self.update_belief(tag=self.validation_non_redundancy, data=True)
         elif message.validation is non_redundancy_invalidated:
-            self.validation_non_redundancy = False
+            self.update_belief(tag=self.validation_non_redundancy, data=False)
         elif message.validation is satisfiability_validated:
-            self.validation_satisfiability = True
+            self.update_belief(tag=self.validation_satisfiability, data=True)
         elif message.validation is satisfiability_validated:
-            self.validation_satisfiability = False
+            self.update_belief(tag=self.validation_satisfiability, data=False)
 
     # override
     async def bdi_select_intention(self, ctx):
 
         print(f"We consider the following atomic requirement:\n {self.candidate}\n")
-        print(f"* Correctness Validation: {str(self.validation_correctness)}")
-        print(f"* Non Redundancy Validation: {str(self.validation_non_redundancy)}")
-        print(f"* Satisfiability Validation: {str(self.validation_satisfiability)}")
+        print(
+            f"* Correctness Validation: {str(self.get_belief_by_tag(self.validation_correctness))}"
+        )
+        print(
+            f"* Non Redundancy Validation: {str(self.get_belief_by_tag(self.validation_non_redundancy))}"
+        )
+        print(
+            f"* Satisfiability Validation: {str(self.get_belief_by_tag(self.validation_satisfiability))}"
+        )
 
         old_list = self.get_belief_by_tag(req_list_tag)
 
         if (
-            (self.validation_correctness is False)
-            or (self.validation_non_redundancy is False)
-            or (self.validation_satisfiability is False)
+            (self.get_belief_by_tag(self.validation_correctness) is False)
+            or (self.get_belief_by_tag(self.validation_non_redundancy) is False)
+            or (self.get_belief_by_tag(self.validation_satisfiability) is False)
         ):
             self.add_intention("PASS", old_list)
 
         elif (
-            (self.validation_correctness is None)
-            or (self.validation_non_redundancy is None)
-            or (self.validation_satisfiability is None)
+            (self.get_belief_by_tag(self.validation_correctness) is None)
+            or (self.get_belief_by_tag(self.validation_non_redundancy) is None)
+            or (self.get_belief_by_tag(self.validation_satisfiability) is None)
         ):
             self.add_intention("WAIT", "-")
 
         else:
             assert (
-                (self.validation_correctness is True)
-                and (self.validation_non_redundancy is True)
-                and (self.validation_satisfiability is True)
+                (self.get_belief_by_tag(self.validation_correctness) is True)
+                and (self.get_belief_by_tag(self.validation_non_redundancy) is True)
+                and (self.get_belief_by_tag(self.validation_satisfiability) is True)
             )
 
             new_list = old_list + " \n * " + self.candidate
@@ -81,9 +88,9 @@ class LooperAgent(BDIRoutedAgent):
             self.add_intention("ADD", new_list)
 
     def reset(self):
-        self.validation_correctness = None  # fixme : Beliefs ?
-        self.validation_non_redundancy = None
-        self.validation_satisfiability = None
+        self.update_belief(tag=self.validation_correctness, data=None)
+        self.update_belief(tag=self.validation_non_redundancy, data=None)
+        self.update_belief(tag=self.validation_satisfiability, data=None)
 
     # override
     async def bdi_act(self, ctx):
