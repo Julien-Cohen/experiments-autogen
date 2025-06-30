@@ -9,14 +9,14 @@ from bdi_routed_agent import *
 
 
 @type_subscription(topic_type=validation_result_topic_type)
-class LooperAgent(BDIRoutedAgent):
+class MultiplexerAgent(BDIRoutedAgent):
 
     validation_correctness = "CORRECTNESS"
     validation_non_redundancy = "NON-REDUNDANCY"
     validation_satisfiability = "SATISFIABILITY"
 
     def __init__(self) -> None:
-        super().__init__("A Looper agent (Algorithmic).")
+        super().__init__("A Multiplexer Agent (Algorithmic).")
 
         self.add_desire("Pass to the manager a list of requirement complete.")
         self.add_desire("Pass to the manager a list of requirement correct.")
