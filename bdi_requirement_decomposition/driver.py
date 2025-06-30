@@ -17,6 +17,8 @@ from requirement_validator_agent import *
 
 from dotenv import load_dotenv
 
+import os
+
 load_dotenv()
 
 
@@ -24,29 +26,33 @@ async def main():
 
     # Workflow
 
-    model_client_1 = OpenAIChatCompletionClient(
-        model="gpt-4o-mini",
-        # api_key="YOUR_API_KEY"
-    )
-    # https://platform.openai.com/settings/organization/limits
+    if os.getenv("LLM_MODEL") == "gpt-4o-mini":
+        # https://platform.openai.com/settings/organization/limits
+        model_client = OpenAIChatCompletionClient(
+            model="gpt-4o-mini",
+            # api_key="YOUR_API_KEY"
+        )
+    elif os.getenv("LLM_MODEL") == "gemini-2.0-flash-lite":
+        # https://ai.google.dev/gemini-api/docs/rate-limits?hl=fr
 
-    model_client_2 = OpenAIChatCompletionClient(
-        model="gemini-2.0-flash-lite",
-        model_info=ModelInfo(
-            vision=True,
-            function_calling=True,
-            json_output=True,
-            family="unknown",
-            structured_output=True,
-        ),
-        # api_key="GEMINI_API_KEY",
-    )
-    # https://ai.google.dev/gemini-api/docs/rate-limits?hl=fr
+        model_client = OpenAIChatCompletionClient(
+            model="gemini-2.0-flash-lite",
+            model_info=ModelInfo(
+                vision=True,
+                function_calling=True,
+                json_output=True,
+                family="unknown",
+                structured_output=True,
+            ),
+            # api_key="GEMINI_API_KEY",
+        )
+    else:
+        raise ValueError("Please set the LLM_MODEL environment variable'.")
 
     from diskcache import Cache
 
     cache_store = DiskCacheStore[CHAT_CACHE_VALUE_TYPE](Cache("/tmp"))
-    cache_client = ChatCompletionCache(model_client_2, cache_store)
+    cache_client = ChatCompletionCache(model_client, cache_store)
 
     # update model_client below to change the LLM model
     model_client = cache_client
