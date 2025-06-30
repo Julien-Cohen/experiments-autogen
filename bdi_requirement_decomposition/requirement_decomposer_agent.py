@@ -73,5 +73,27 @@ class RequirementDecomposerAgent(LLMBDIRoutedAgent):
                 current_list=self.get_belief_by_tag(req_list_tag),
                 atomic_requirement_tentative=data,
             ),
-            topic_id=TopicId(validation_request_topic_type, source=self.id.key),
+            topic_id=TopicId(
+                correctness_validation_request_topic_type, source=self.id.key
+            ),
+        )
+        await self.publish_message(
+            Message(
+                initial_description=self.get_belief_by_tag(spec_tag),
+                current_list=self.get_belief_by_tag(req_list_tag),
+                atomic_requirement_tentative=data,
+            ),
+            topic_id=TopicId(
+                non_redundancy_validation_request_topic_type, source=self.id.key
+            ),
+        )
+        await self.publish_message(
+            Message(
+                initial_description=self.get_belief_by_tag(spec_tag),
+                current_list=self.get_belief_by_tag(req_list_tag),
+                atomic_requirement_tentative=data,
+            ),
+            topic_id=TopicId(
+                satisfiability_validation_request_topic_type, source=self.id.key
+            ),
         )

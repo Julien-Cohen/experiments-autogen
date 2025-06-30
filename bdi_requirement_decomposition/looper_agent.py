@@ -20,7 +20,9 @@ class LooperAgent(BDIRoutedAgent):
             "Pass to the manager a list of requirements without redundancy."
         )
         self.candidate = None
-        self.validation = None
+        self.validation_correctness = None  # fixme : Beliefs ?
+        self.validation_non_redundancy = None
+        self.validation_satisfiability = None
 
     @message_handler
     async def handle_message(self, message: Message, ctx: MessageContext) -> None:
@@ -30,40 +32,86 @@ class LooperAgent(BDIRoutedAgent):
     def bdi_observe_message(self, message):
         message__bdi_observe_message(self, message)
         self.candidate = message.atomic_requirement_tentative
-        self.validation = bool(message.validation)
+        if message.validation is correctness_validated:
+            self.validation_correctness = True
+        elif message.validation is correctness_invalidated:
+            self.validation_correctness = False
+        elif message.validation is non_redundancy_validated:
+            self.validation_non_redundancy = True
+        elif message.validation is non_redundancy_invalidated:
+            self.validation_non_redundancy = False
+        elif message.validation is satisfiability_validated:
+            self.validation_satisfiability = True
+        elif message.validation is satisfiability_validated:
+            self.validation_satisfiability = False
 
     # override
     async def bdi_select_intention(self, ctx):
 
         print(f"We consider the following atomic requirement:\n {self.candidate}\n")
-        print(f"Validation: {self.validation}")
+        print(f"* Correctness Validation: {str(self.validation_correctness)}")
+        print(f"* Non Redundancy Validation: {str(self.validation_non_redundancy)}")
+        print(f"* Satisfiability Validation: {str(self.validation_satisfiability)}")
 
-        new_list = (
-            self.get_belief_by_tag(req_list_tag) + " \n * " + self.candidate
-            if self.validation
-            else self.get_belief_by_tag(req_list_tag)
-        )
+        old_list = self.get_belief_by_tag(req_list_tag)
 
-        if self.validation:
-            self.add_intention(
-                "ADD",
-                new_list,
-            )
+        if (
+            (self.validation_correctness is False)
+            or (self.validation_non_redundancy is False)
+            or (self.validation_satisfiability is False)
+        ):
+            self.add_intention("PASS", old_list)
+
+        elif (
+            (self.validation_correctness is None)
+            or (self.validation_non_redundancy is None)
+            or (self.validation_satisfiability is None)
+        ):
+            self.add_intention("WAIT", "-")
+
         else:
-            self.add_intention(
-                "PASS",
-                new_list,
+            assert (
+                (self.validation_correctness is True)
+                and (self.validation_non_redundancy is True)
+                and (self.validation_satisfiability is True)
             )
+
+            new_list = old_list + " \n * " + self.candidate
+
+            self.add_intention("ADD", new_list)
+
+    def reset(self):
+        self.validation_correctness = None  # fixme : Beliefs ?
+        self.validation_non_redundancy = None
+        self.validation_satisfiability = None
 
     # override
     async def bdi_act(self, ctx):
-        action = "ADD" if self.has_intention("ADD") else "PASS"
-        data = self.get_intention_data(action)
-        self.remove_intention(action, data)
-        await self.publish_message(
-            Message(
-                initial_description=self.get_belief_by_tag(spec_tag),
-                current_list=data,
-            ),
-            topic_id=TopicId(init_topic_type, source=self.id.key),
-        )
+        if self.has_intention("ADD"):
+            self.reset()
+            data = self.get_intention_data("ADD")
+            self.remove_intention("ADD", data)
+            await self.publish_message(
+                Message(
+                    initial_description=self.get_belief_by_tag(spec_tag),
+                    current_list=data,
+                ),
+                topic_id=TopicId(init_topic_type, source=self.id.key),
+            )
+
+        elif self.has_intention("PASS"):
+            self.reset()
+            data = self.get_intention_data("PASS")
+            self.remove_intention("PASS", data)
+            await self.publish_message(
+                Message(
+                    initial_description=self.get_belief_by_tag(spec_tag),
+                    current_list=data,
+                ),
+                topic_id=TopicId(init_topic_type, source=self.id.key),
+            )
+
+        else:
+            assert self.has_intention("WAIT")
+            self.remove_first_intention("WAIT")
+            return

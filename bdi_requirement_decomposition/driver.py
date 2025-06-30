@@ -58,15 +58,29 @@ async def main():
         type=init_topic_type,
         factory=lambda: RequirementManagerAgent(model_client=model_client),
     )
+
     await RequirementDecomposerAgent.register(
         runtime,
         type=cut_request_topic_type,
         factory=lambda: RequirementDecomposerAgent(model_client=model_client),
     )
-    await RequirementValidatorAgent.register(
+
+    await RequirementValidatorAgentC.register(
         runtime,
-        type=validation_request_topic_type,
-        factory=lambda: RequirementValidatorAgent(model_client=model_client),
+        type=correctness_validation_request_topic_type,
+        factory=lambda: RequirementValidatorAgentC(model_client=model_client),
+    )
+
+    await RequirementValidatorAgentNR.register(
+        runtime,
+        type=non_redundancy_validation_request_topic_type,
+        factory=lambda: RequirementValidatorAgentNR(model_client=model_client),
+    )
+
+    await RequirementValidatorAgentS.register(
+        runtime,
+        type=satisfiability_validation_request_topic_type,
+        factory=lambda: RequirementValidatorAgentS(model_client=model_client),
     )
 
     await LooperAgent.register(

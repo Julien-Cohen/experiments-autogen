@@ -19,7 +19,7 @@ class BDIRoutedAgent(RoutedAgent):
 
     def __str__(self):
         return (
-            f"{'-' * 80}"
+            f"{'-' * 80}\n"
             + "I am: "
             + self._description
             + "\n"
@@ -34,7 +34,7 @@ class BDIRoutedAgent(RoutedAgent):
     def add_intention(self, action: str, data: str):
         self.intentions.add(action, data)
         log("Intention updated (" + self._description + ")")
-        log(str(self.intentions))
+        log(str(self.intentions) + "\n")
 
     def remove_intention(self, action, data):
         self.intentions.remove_intention(action, data)

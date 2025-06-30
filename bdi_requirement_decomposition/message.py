@@ -17,7 +17,9 @@ class Message:
 # Topics
 
 cut_request_topic_type = "CUT"
-validation_request_topic_type = "VALIDATION_REQ"
+correctness_validation_request_topic_type = "CORRECTNESS_VALIDATION_REQ"
+non_redundancy_validation_request_topic_type = "NON_REDUNDANCY_VALIDATION_REQ"
+satisfiability_validation_request_topic_type = "SATISFIABILITY_VALIDATION_REQ"
 validation_result_topic_type = "VALIDATION_RES"
 init_topic_type = "INIT"
 
@@ -27,6 +29,14 @@ from bdi_data import *
 # Belief tags
 spec_tag = "SPEC"
 req_list_tag = "REQ_LIST"
+
+# validation tags
+correctness_validated = "CORRECT"
+correctness_invalidated = "INCORRECT"
+non_redundancy_validated = "NOT_REDUNDANT"
+non_redundancy_invalidated = "REDUNDANT"
+satisfiability_validated = "SATISFIABLE"
+satisfiability_invalidated = "NOT_SATISFIABLE"
 
 
 def bdi_observe_message(d: BDIRoutedAgent, m: Message):
