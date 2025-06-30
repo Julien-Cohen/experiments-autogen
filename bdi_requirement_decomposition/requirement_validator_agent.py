@@ -35,9 +35,7 @@ class RequirementValidatorAgentC(LLMBDIRoutedAgent):
         self.llm_explicit_directive = "Do you validate this?"
 
         self.add_desire("Ensure that the new requirement is correct.")
-        self.add_desire(
-            "Ensure that the new requirement is not already taken into account."
-        )
+
         self.candidate = None
 
     @message_handler
