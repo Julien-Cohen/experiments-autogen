@@ -13,7 +13,6 @@ autogen-agentchat==0.6.1
 autogen-core==0.6.1
 autogen-ext==0.6.1
 autogen-mistral==0.0.1
-autogenstudio==0.4.2.2
 azure-ai-agents==1.1.0b2
 azure-ai-documentintelligence==1.0.2
 azure-ai-inference==1.0.0b9
