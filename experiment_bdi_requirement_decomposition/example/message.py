@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 from bdi_routed_agent import BDIRoutedAgent
 
 

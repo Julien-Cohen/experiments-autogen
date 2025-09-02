@@ -1,6 +1,10 @@
 # Test BDI agents with a sequential workflow
 # Adapted from https://microsoft.github.io/autogen/stable//user-guide/core-user-guide/design-patterns/sequential-workflow.html
 
+import sys
+sys.path.append('../')
+
+
 from autogen_core import (
     SingleThreadedAgentRuntime,
     TopicId,

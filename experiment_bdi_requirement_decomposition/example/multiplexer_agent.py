@@ -4,7 +4,7 @@ from autogen_core import (
     TopicId,
 )
 
-from message import *
+from experiment_bdi_requirement_decomposition.example.message import *
 from bdi_routed_agent import *
 
 

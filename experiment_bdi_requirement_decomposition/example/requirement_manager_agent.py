@@ -5,7 +5,7 @@ from autogen_core import (
 )
 from autogen_core.models import UserMessage
 
-from message import *
+from experiment_bdi_requirement_decomposition.example.message import *
 from llm_bdi_routed_agent import *
 
 
