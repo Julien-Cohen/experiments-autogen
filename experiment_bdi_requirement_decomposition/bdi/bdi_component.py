@@ -57,3 +57,8 @@ class BDIComponent:
         log(str(self))
         await self.bdi_select_intention(ctx)
         await self.bdi_act(ctx)
+
+    def __str__(self):
+        return (
+            str(self.beliefs) + "\n" + str(self.desires) + "\n" + str(self.intentions)
+        )

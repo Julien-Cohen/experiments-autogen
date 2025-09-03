@@ -15,11 +15,8 @@ class BDIRoutedAgent(RoutedAgent, BDIComponent):
             + "I am: "
             + self._description
             + "\n"
-            + str(self.beliefs)
+            + BDIComponent.__str__(self)
             + "\n"
-            + str(self.desires)
-            + "\n"
-            + str(self.intentions)
             + f"{'-' * 80}"
         )
 
