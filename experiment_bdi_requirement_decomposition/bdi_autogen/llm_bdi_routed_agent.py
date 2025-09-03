@@ -1,6 +1,6 @@
 from autogen_core.models import SystemMessage, ChatCompletionClient
 
-from .bdi_routed_agent import *
+from experiment_bdi_requirement_decomposition.bdi_autogen.bdi_routed_agent import *
 
 
 def log_answer(answer):

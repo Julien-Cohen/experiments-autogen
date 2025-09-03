@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
+from bdi.bdi_data import *
+from bdi.bdi_component import *
 
-from bdi.bdi_routed_agent import BDIRoutedAgent
+# from bdi_autogen.bdi_routed_agent import BDIRoutedAgent
 
 
 # Message Protocol
@@ -25,8 +27,6 @@ validation_result_topic_type = "VALIDATION_RES"
 init_topic_type = "INIT"
 
 
-from bdi.bdi_data import *
-
 # Belief tags
 spec_tag = "SPEC"
 req_list_tag = "REQ_LIST"
@@ -40,10 +40,6 @@ satisfiability_validated = "SATISFIABLE"
 satisfiability_invalidated = "NOT_SATISFIABLE"
 
 
-def bdi_observe_message(d: BDIRoutedAgent, m: Message):
+def message__bdi_observe_message(d: BDIComponent, m: Message):
     d.update_belief(m.initial_description, spec_tag)
     d.update_belief(m.current_list, req_list_tag)
-
-
-def message__bdi_observe_message(d: BDIRoutedAgent, m: Message):
-    bdi_observe_message(d, m)
