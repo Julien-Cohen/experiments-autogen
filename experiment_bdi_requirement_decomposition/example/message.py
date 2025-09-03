@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-from bdi_routed_agent import BDIRoutedAgent
+from bdi.bdi_routed_agent import BDIRoutedAgent
 
 
 # Message Protocol
@@ -25,7 +25,7 @@ validation_result_topic_type = "VALIDATION_RES"
 init_topic_type = "INIT"
 
 
-from bdi_data import *
+from bdi.bdi_data import *
 
 # Belief tags
 spec_tag = "SPEC"

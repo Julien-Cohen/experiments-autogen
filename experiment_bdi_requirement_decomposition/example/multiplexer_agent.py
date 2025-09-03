@@ -5,7 +5,7 @@ from autogen_core import (
 )
 
 from experiment_bdi_requirement_decomposition.example.message import *
-from bdi_routed_agent import *
+from bdi.bdi_routed_agent import *
 
 
 @type_subscription(topic_type=validation_result_topic_type)

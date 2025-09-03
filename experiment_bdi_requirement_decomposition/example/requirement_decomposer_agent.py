@@ -7,7 +7,7 @@ from autogen_core.models import UserMessage
 
 from experiment_bdi_requirement_decomposition.example.message import *
 
-from llm_bdi_routed_agent import *
+from bdi.llm_bdi_routed_agent import *
 
 
 @type_subscription(topic_type=cut_request_topic_type)
