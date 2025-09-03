@@ -2,6 +2,7 @@ from autogen_core import (
     type_subscription,
     MessageContext,
     TopicId,
+    message_handler,
 )
 
 from experiment_bdi_requirement_decomposition.example.message import *

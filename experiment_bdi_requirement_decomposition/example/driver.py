@@ -5,7 +5,6 @@ import context
 
 from autogen_core import (
     SingleThreadedAgentRuntime,
-    TopicId,
 )
 from autogen_core.models import ModelInfo
 from autogen_ext.cache_store.diskcache import DiskCacheStore
