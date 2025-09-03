@@ -18,6 +18,8 @@ from requirement_validator_agent import *
 
 from dotenv import load_dotenv
 
+from diskcache import Cache
+
 import os
 
 load_dotenv()
@@ -50,8 +52,7 @@ async def main():
     else:
         raise ValueError("Please set the LLM_MODEL environment variable'.")
 
-    from diskcache import Cache
-
+    # install a cache for LLM response
     cache_store = DiskCacheStore[CHAT_CACHE_VALUE_TYPE](Cache("/tmp"))
     cache_client = ChatCompletionCache(model_client, cache_store)
 

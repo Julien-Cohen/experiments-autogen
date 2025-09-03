@@ -3,8 +3,6 @@ from dataclasses import dataclass
 from bdi.bdi_data import *
 from bdi.bdi_component import *
 
-# from bdi_autogen.bdi_routed_agent import BDIRoutedAgent
-
 
 # Message Protocol
 

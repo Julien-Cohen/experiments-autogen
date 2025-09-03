@@ -5,7 +5,8 @@ from autogen_core import (
     message_handler,
 )
 
-from experiment_bdi_requirement_decomposition.example.message import *
+from message import *
+
 from bdi_autogen.bdi_routed_agent import *
 
 
