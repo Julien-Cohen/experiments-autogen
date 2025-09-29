@@ -13,7 +13,7 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 from requirement_manager_agent import RequirementManagerAgent
 from requirement_decomposer_agent import RequirementDecomposerAgent
-from multiplexer_agent import MultiplexerAgent
+from multiplexer_agent import ConsensusAgent
 from requirement_validator_agent import *
 
 from dotenv import load_dotenv
@@ -91,8 +91,8 @@ async def main():
         factory=lambda: RequirementValidatorAgentS(model_client=model_client),
     )
 
-    await MultiplexerAgent.register(
-        runtime, type=validation_result_topic_type, factory=lambda: MultiplexerAgent()
+    await ConsensusAgent.register(
+        runtime, type=validation_result_topic_type, factory=lambda: ConsensusAgent()
     )
 
     # Run the workflow

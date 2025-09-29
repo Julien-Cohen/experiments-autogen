@@ -11,7 +11,7 @@ from bdi_autogen.bdi_routed_agent import *
 
 
 @type_subscription(topic_type=validation_result_topic_type)
-class MultiplexerAgent(BDIRoutedAgent):
+class ConsensusAgent(BDIRoutedAgent):
 
     validation_correctness = "CORRECTNESS"
     validation_non_redundancy = "NON-REDUNDANCY"

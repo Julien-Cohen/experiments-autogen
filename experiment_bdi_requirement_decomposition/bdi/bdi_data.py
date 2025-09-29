@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Beliefs:
-    _store: list[tuple[str, str]]
+    _store: list[tuple[str, str]]  # fixme : class / instance variable
 
     def __init__(self):
         self._store = list()
@@ -35,7 +35,7 @@ class Beliefs:
 
 @dataclass
 class Intentions:
-    _store: list[tuple[str, str]]
+    _store: list[tuple[str, str]]  # fixme : class / instance variable
 
     def __init__(self):
         self._store = list()
@@ -71,7 +71,7 @@ class Intentions:
 
 @dataclass
 class Desires:
-    _store: list[str]
+    _store: list[str]  # fixme : class / instance variable
 
     def __init__(self):
         self._store = list()
