@@ -11,6 +11,10 @@ from message import *
 from bdi_autogen.llm_bdi_routed_agent import *
 
 
+def update_user(r: str):
+    print("The generated list of requirements is:\n" + r)
+
+
 @type_subscription(topic_type=init_topic_type)
 class RequirementManagerAgent(LLMBDIRoutedAgent):
 
@@ -94,5 +98,6 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
             )
         else:
             assert self.has_intention("STOP")
-            print(self.get_intention_data("STOP"))
+            requirements = self.get_intention_data("STOP")
             self.remove_first_intention("STOP")
+            update_user(requirements)
