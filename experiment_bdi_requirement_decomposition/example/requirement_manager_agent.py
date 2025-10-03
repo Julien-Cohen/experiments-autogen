@@ -93,5 +93,6 @@ class RequirementManagerAgent(LLMBDIRoutedAgent):
                 topic_id=TopicId(cut_request_topic_type, source=self.id.key),
             )
         else:
-            self.remove_first_intention("STOP")
+            assert self.has_intention("STOP")
             print(self.get_intention_data("STOP"))
+            self.remove_first_intention("STOP")
