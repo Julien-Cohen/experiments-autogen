@@ -1,4 +1,4 @@
-# experiments-autogen
+# Experiments with BDI concepts on AutoGen
 
 
 ## Pre-requesites :

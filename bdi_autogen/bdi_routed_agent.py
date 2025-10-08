@@ -1,6 +1,6 @@
 from autogen_core import RoutedAgent
 
-from experiment_bdi_requirement_decomposition.bdi.bdi_component import *
+from bdi.bdi_component import *
 
 
 class BDIRoutedAgent(RoutedAgent, BDIComponent):
